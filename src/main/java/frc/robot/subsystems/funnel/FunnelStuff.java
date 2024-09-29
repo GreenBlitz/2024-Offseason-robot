@@ -1,4 +1,4 @@
-package frc.robot.subsystems.chooser;
+package frc.robot.subsystems.funnel;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.digitalinput.IDigitalInput;

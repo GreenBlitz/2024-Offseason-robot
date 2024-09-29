@@ -1,10 +1,11 @@
-package frc.robot.subsystems.chooser;
+package frc.robot.subsystems.funnel;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.motor.IMotor;
 import frc.utils.GBSubsystem;
+import org.littletonrobotics.junction.Logger;
 
 public class Funnel extends GBSubsystem {
 
@@ -13,6 +14,8 @@ public class Funnel extends GBSubsystem {
     private final FunnelStuff funnelStuff;
     private final IDigitalInput digitalInput;
     private final DigitalInputInputsAutoLogged digitalInputInputs;
+    private Rotation2d bigFunnelTargetPosition;
+    private Rotation2d middleFunnelTargetPosition;
 
     public Funnel(FunnelStuff funnelStuff) {
         super(funnelStuff.logPath());
@@ -22,6 +25,8 @@ public class Funnel extends GBSubsystem {
         this.funnelStuff = funnelStuff;
         this.digitalInputInputs = new DigitalInputInputsAutoLogged();
 
+        this.bigFunnelTargetPosition = new Rotation2d();
+        this.middleFunnelTargetPosition = new Rotation2d();
         update();
     }
 
@@ -62,4 +67,32 @@ public class Funnel extends GBSubsystem {
     public Rotation2d getBigFunnelPosition(){
         return funnelStuff.bigFunnelPositionSignal().getLatestValue();
     }
+
+    public Rotation2d getMiddleFunnelPosition(){
+        return funnelStuff.middleFunnelPositionSignal().getLatestValue();
+    }
+
+    public void setBigFunnelTargetPosition(double rotations) {
+        this.bigFunnelTargetPosition = Rotation2d.fromRotations(getBigFunnelPosition().getRotations() + rotations);
+    }
+
+    public void setMiddleFunnelTargetPosition(double rotations) {
+        this.middleFunnelTargetPosition = Rotation2d.fromRotations(getMiddleFunnelPosition().getRotations() + rotations);
+    }
+
+    public boolean isBigFunnelPastPosition() {
+        return getBigFunnelPosition().getRotations() > bigFunnelTargetPosition.getRotations();
+    }
+
+    public boolean isMiddleFunnelPastPosition() {
+        return getMiddleFunnelPosition().getRotations() > middleFunnelTargetPosition.getRotations();
+    }
+
+    @Override
+    protected void subsystemPeriodic() {
+        update();
+        Logger.processInputs(funnelStuff.digitalInputLogPath(), digitalInputInputs);
+        Logger.recordOutput(funnelStuff.logPath() + "IsObjectIn", isObjectIn());
+    }
+
 }
