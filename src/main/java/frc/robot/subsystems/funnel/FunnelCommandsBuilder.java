@@ -56,7 +56,7 @@ public class FunnelCommandsBuilder {
     }
 
 
-    public Command rollBigFunnelRotations(Rotation2d rotations, double power) {
+    public Command rollBigFunnel(Rotation2d rotations, double power) {
         Rotation2d startingPosition = funnel.getBigFunnelPosition();
         return new FunctionalCommand(
                 ()-> {},
@@ -67,7 +67,7 @@ public class FunnelCommandsBuilder {
         ).withName("Rotate big funnel rotations: " + rotations);
     }
 
-    public Command rollMiddleFunnelRotations(Rotation2d rotations, double power) {
+    public Command rollMiddleFunnel(Rotation2d rotations, double power) {
         Rotation2d startingPosition = funnel.getMiddleFunnelPosition();
         return new FunctionalCommand(
                 ()-> {},
