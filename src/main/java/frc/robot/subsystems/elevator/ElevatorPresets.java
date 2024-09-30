@@ -1,16 +1,19 @@
 package frc.robot.subsystems.elevator;
 
 public enum ElevatorPresets {
-    SCORE(0), AMP(0), DEFAULT(0);
 
-    private final double position;
+	SCORE(0),
+	AMP(0),
+	DEFAULT(0);
 
-    ElevatorPresets(double position) {
-        this.position = position;
-    }
+	private final double position;
 
-    public double getPosition() {
-        return position;
-    }
+	ElevatorPresets(double position) {
+		this.position = position;
+	}
+
+	public double getPosition() {
+		return position;
+	}
 
 }

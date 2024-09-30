@@ -12,14 +12,8 @@ public class IDs {
 		PowerDistribution.ModuleType.kRev
 	);
 
-	public static final SparkMaxDeviceID ELEVATOR_FIRST_MOTOR = new SparkMaxDeviceID(
-			0,
-			CANSparkLowLevel.MotorType.kBrushless
-	);
+	public static final SparkMaxDeviceID ELEVATOR_FIRST_MOTOR = new SparkMaxDeviceID(0, CANSparkLowLevel.MotorType.kBrushless);
 
-	public static final SparkMaxDeviceID ELEVATOR_SECOND_MOTOR = new SparkMaxDeviceID(
-			0,
-			CANSparkLowLevel.MotorType.kBrushless
-	);
+	public static final SparkMaxDeviceID ELEVATOR_SECOND_MOTOR = new SparkMaxDeviceID(0, CANSparkLowLevel.MotorType.kBrushless);
 
 }

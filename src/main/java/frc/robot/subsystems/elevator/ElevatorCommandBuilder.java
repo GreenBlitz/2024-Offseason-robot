@@ -8,13 +8,13 @@ import java.util.function.DoubleSupplier;
 
 public class ElevatorCommandBuilder {
 
-    private final Elevator elevator;
+	private final Elevator elevator;
 
-    public ElevatorCommandBuilder(Elevator elevator) {
-        this.elevator = elevator;
-    }
+	public ElevatorCommandBuilder(Elevator elevator) {
+		this.elevator = elevator;
+	}
 
-    //@formatter:off
+	//@formatter:off
     public Command setPower(double power) {
         return new FunctionalCommand(
                 () -> elevator.setPower(power),
