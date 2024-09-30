@@ -19,9 +19,13 @@ public class Elevator extends GBSubsystem {
         this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
         this.elevatorStuff = elevatorStuff;
         this.commandBuilder = new ElevatorCommandBuilder(this);
-        this.positionRequest = new SparkMaxDoubleRequest(targetPosition,
+
+        this.positionRequest = new SparkMaxDoubleRequest(
+                targetPosition,
                 SparkMaxDoubleRequest.SparkDoubleRequestType.CURRENT,
-                0);
+                0
+        );
+        elevatorStuff.mainMotor().applyDoubleRequest(positionRequest);
     }
 
 
@@ -54,14 +58,14 @@ public class Elevator extends GBSubsystem {
     }
 
     public double getSynchronizingDelta() {
-        return elevatorStuff.mainMotorPositionSignal().getLatestValue().getRadians() - elevatorStuff.secondaryMotorPositionSignal().getLatestValue().getRadians();
+        return elevatorStuff.mainMotorPositionSignal().getLatestValue() - elevatorStuff.secondaryMotorPositionSignal().getLatestValue();
     }
 
     public boolean emergencyStop() {
         return getSynchronizingDelta() >= ElevatorConstants.MAXIMUM_MOTORS_DELTA || isPhysicallyStopped();
     }
 
-    public void checkEmergancyStop() {
+    public void checkEmergencyStop() {
         if (emergencyStop()) {
             stop();
         }
@@ -75,6 +79,7 @@ public class Elevator extends GBSubsystem {
     @Override
     protected void subsystemPeriodic() {
         Logger.processInputs(elevatorStuff.digitalInputsLogPath(), digitalInputsInputs);
-        elevatorStuff.mainMotor().applyDoubleRequest(positionRequest);
+        positionRequest.withSetPoint(targetPosition);
+        checkEmergencyStop();
     }
 }

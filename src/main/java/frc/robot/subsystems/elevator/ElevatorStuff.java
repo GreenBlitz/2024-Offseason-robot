@@ -12,7 +12,7 @@ public record ElevatorStuff(
     ControllableMotor mainMotor,
     IMotor secondaryMotor,
     InputSignal<Double> voltageSignal,
-    InputSignal<Rotation2d> mainMotorPositionSignal,
-    InputSignal<Rotation2d> secondaryMotorPositionSignal,
+    InputSignal<Double> mainMotorPositionSignal,
+    InputSignal<Double> secondaryMotorPositionSignal,
     IDigitalInput digitalInput
 ) { }
