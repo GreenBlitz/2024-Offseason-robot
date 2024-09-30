@@ -34,17 +34,6 @@ public class ChooserCommandsBuilder {
 				chooser
 		).withName("Set chooser power by supplier");
     }
-
-    public Command rollChooser(Rotation2d rotations, double power) {
-        Rotation2d startingPosition = chooser.getPosition();
-        return new FunctionalCommand(
-                () -> {},
-                () -> chooser.setPower(power),
-                interrupted -> chooser.stop(),
-                () -> chooser.isAtPosition(rotations),
-                chooser
-        ).withName("Rotate chooser rotations: " + rotations);
-    }
 	//@formatter:on
 
 	public Command stop() {

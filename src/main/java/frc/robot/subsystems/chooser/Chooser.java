@@ -14,7 +14,6 @@ public class Chooser extends GBSubsystem {
 	private final ChooserCommandsBuilder commandBuilder;
 	private final IDigitalInput digitalInput;
 	private final DigitalInputInputsAutoLogged digitalInputInputs;
-	private Rotation2d targetPosition;
 
 	public Chooser(ChooserStuff chooserStuff) {
 		super(chooserStuff.logPath());
@@ -24,14 +23,14 @@ public class Chooser extends GBSubsystem {
 		this.digitalInputInputs = new DigitalInputInputsAutoLogged();
 
 		this.commandBuilder = new ChooserCommandsBuilder(this);
-		this.targetPosition = new Rotation2d();
+		updateInputs();
 	}
 
 	public boolean isObjectIn() {
 		return digitalInputInputs.debouncedValue;
 	}
 
-	public void update() {
+	public void updateInputs() {
 		digitalInput.updateInputs(digitalInputInputs);
 		motor.updateSignals(chooserStuff.voltageSignal(), chooserStuff.positionSignal());
 	}
@@ -48,25 +47,9 @@ public class Chooser extends GBSubsystem {
 		motor.setBrake(brake);
 	}
 
-	public Rotation2d getPosition() {
-		return chooserStuff.positionSignal().getLatestValue();
-	}
-
-	public void setTargetPosition(double rotations) {
-		this.targetPosition = Rotation2d.fromRotations(getPosition().getRotations() + rotations);
-	}
-
-	public boolean isAtPosition(Rotation2d position) {
-		return getPosition().getRotations() - position.getRotations() <= 5;
-	}
-
-	public boolean isPastPosition() {
-		return getPosition().getRotations() > targetPosition.getRotations();
-	}
-
 	@Override
 	protected void subsystemPeriodic() {
-		update();
+		updateInputs();
 		Logger.processInputs(chooserStuff.digitalInputLogPath(), digitalInputInputs);
 		Logger.recordOutput(chooserStuff.logPath() + "IsObjectIn", isObjectIn());
 	}

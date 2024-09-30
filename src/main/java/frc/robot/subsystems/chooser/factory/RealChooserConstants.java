@@ -23,7 +23,7 @@ public class RealChooserConstants {
 	private final static SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
 
 	public static ChooserStuff generateChooserStuff(String logPath) {
-		SparkMaxWrapper wrapper = new SparkMaxWrapper(IDs.CHOOSER);
+		SparkMaxWrapper wrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.CHOOSER);
 		SysIdRoutine.Config config = new SysIdRoutine.Config();
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, wrapper, config);
 
