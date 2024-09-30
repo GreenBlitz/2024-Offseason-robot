@@ -41,7 +41,7 @@ public class RealFunnelConstants {
         SparkMaxAngleSignal middleFunnelAngleSignal = new SparkMaxAngleSignal("middleFunnelPosition", middleFunnelPosition, AngleUnit.ROTATIONS);
 
         BooleanSupplier isBeamBroke = () -> middleFunnelWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
-        middleFunnelWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);=
+        middleFunnelWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
         SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isBeamBroke, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
 
         return new FunnelStuff(
