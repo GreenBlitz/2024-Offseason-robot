@@ -82,4 +82,5 @@ public class Elevator extends GBSubsystem {
         positionRequest.withSetPoint(targetPosition);
         checkEmergencyStop();
     }
+
 }
