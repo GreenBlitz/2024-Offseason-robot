@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 public class FunnelCommandsBuilder {
 
@@ -25,10 +26,10 @@ public class FunnelCommandsBuilder {
         ).withName("Set funnel power: " + power);
     }
 
-    public Command setFunnelPower(DoubleSupplier power) {
+    public Command setFunnelPower(Supplier<Double> power) {
         return new FunctionalCommand(
                 () -> {},
-                () -> funnel.setPower(power.getAsDouble()),
+                () -> funnel.setPower(power.get()),
                 interrupted -> funnel.stop(),
                 () -> false,
                 funnel
