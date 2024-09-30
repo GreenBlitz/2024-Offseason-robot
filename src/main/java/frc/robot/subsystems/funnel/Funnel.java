@@ -9,90 +9,76 @@ import org.littletonrobotics.junction.Logger;
 
 public class Funnel extends GBSubsystem {
 
-	private final IMotor bigFunnelMotor;
-	private final IMotor middleFunnelMotor;
-	private final FunnelStuff funnelStuff;
-	private final IDigitalInput digitalInput;
-	private final DigitalInputInputsAutoLogged digitalInputInputs;
-	private Rotation2d bigFunnelTargetPosition;
-	private Rotation2d middleFunnelTargetPosition;
+	private final IMotor motor;
+	private final FunnelAvatiach funnelAvatiach;
+	private final IDigitalInput shooterDigitalInput;
+	private final IDigitalInput ampDigitalInput;
+	private final DigitalInputInputsAutoLogged shooterDigitalInputInputs;
+	private final DigitalInputInputsAutoLogged ampDigitalInputInputs;
+	private Rotation2d targetPosition;
 
-	public Funnel(FunnelStuff funnelStuff) {
-		super(funnelStuff.logPath());
-		this.bigFunnelMotor = funnelStuff.bigFunnelMotor();
-		this.middleFunnelMotor = funnelStuff.middleFunnelMotor();
-		this.digitalInput = funnelStuff.digitalInput();
-		this.funnelStuff = funnelStuff;
-		this.digitalInputInputs = new DigitalInputInputsAutoLogged();
+	public Funnel(FunnelAvatiach funnelAvatiach) {
+		super(funnelAvatiach.logPath());
+		this.motor = funnelAvatiach.motor();
+		this.shooterDigitalInput = funnelAvatiach.shooterDigitalInput();
+		this.ampDigitalInput = funnelAvatiach.ampDigitalInput();
+		this.funnelAvatiach = funnelAvatiach;
+		this.shooterDigitalInputInputs = new DigitalInputInputsAutoLogged();
+		this.ampDigitalInputInputs = new DigitalInputInputsAutoLogged();
 
-		this.bigFunnelTargetPosition = new Rotation2d();
-		this.middleFunnelTargetPosition = new Rotation2d();
+		this.targetPosition = new Rotation2d();
 		update();
 	}
 
-	public boolean isObjectIn() {
-		return digitalInputInputs.debouncedValue;
+	public boolean isObjectInShooter() {
+		return shooterDigitalInputInputs.debouncedValue;
+	}
+
+	public boolean isObjectInAmp() {
+		return ampDigitalInputInputs.debouncedValue;
 	}
 
 	public void update() {
-		digitalInput.updateInputs(digitalInputInputs);
-		bigFunnelMotor.updateSignals(funnelStuff.bigFunnelVoltageSignal(), funnelStuff.bigFunnelPositionSignal());
-		middleFunnelMotor.updateSignals(funnelStuff.middleFunnelVoltageSignal(), funnelStuff.middleFunnelPositionSignal());
+		shooterDigitalInput.updateInputs(shooterDigitalInputInputs);
+		ampDigitalInput.updateInputs(ampDigitalInputInputs);
+		motor.updateSignals(funnelAvatiach.voltageSignal(), funnelAvatiach.positionSignal());
 	}
 
-	public void setBigFunnelPower(double power) {
-		bigFunnelMotor.setPower(power);
+	public void setPower(double power) {
+		motor.setPower(power);
 	}
 
-	public void setMiddleFunnelPower(double power) {
-		middleFunnelMotor.setPower(power);
+	public void stop() {
+		motor.stop();
 	}
 
-	public void stopBigFunnel() {
-		bigFunnelMotor.stop();
+	public void setBrake(boolean brake) {
+		motor.setBrake(brake);
 	}
 
-	public void stopMiddleFunnel() {
-		middleFunnelMotor.stop();
+	public Rotation2d getPosition() {
+		return funnelAvatiach.positionSignal().getLatestValue();
 	}
 
-	public void setBigFunnelBrake(boolean brake) {
-		bigFunnelMotor.setBrake(brake);
+	public void setTargetPosition(double rotations) {
+		this.targetPosition = Rotation2d.fromRotations(getPosition().getRotations() + rotations);
 	}
 
-	public void setMiddleFunnelBrake(boolean brake) {
-		middleFunnelMotor.setBrake(brake);
+	public boolean isAtPosition(Rotation2d position){
+		return (getPosition().getRotations() - position.getRotations() <= 5);
 	}
 
-	public Rotation2d getBigFunnelPosition() {
-		return funnelStuff.bigFunnelPositionSignal().getLatestValue();
-	}
-
-	public Rotation2d getMiddleFunnelPosition() {
-		return funnelStuff.middleFunnelPositionSignal().getLatestValue();
-	}
-
-	public void setBigFunnelTargetPosition(double rotations) {
-		this.bigFunnelTargetPosition = Rotation2d.fromRotations(getBigFunnelPosition().getRotations() + rotations);
-	}
-
-	public void setMiddleFunnelTargetPosition(double rotations) {
-		this.middleFunnelTargetPosition = Rotation2d.fromRotations(getMiddleFunnelPosition().getRotations() + rotations);
-	}
-
-	public boolean isBigFunnelPastPosition() {
-		return getBigFunnelPosition().getRotations() > bigFunnelTargetPosition.getRotations();
-	}
-
-	public boolean isMiddleFunnelPastPosition() {
-		return getMiddleFunnelPosition().getRotations() > middleFunnelTargetPosition.getRotations();
+	public boolean isPastPosition() {
+		return getPosition().getRotations() > targetPosition.getRotations();
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
 		update();
-		Logger.processInputs(funnelStuff.digitalInputLogPath(), digitalInputInputs);
-		Logger.recordOutput(funnelStuff.logPath() + "IsObjectIn", isObjectIn());
+		Logger.processInputs(funnelAvatiach.shooterDigitalInputLogPath(), shooterDigitalInputInputs);
+		Logger.processInputs(funnelAvatiach.ampDigitalInputLogPath(), ampDigitalInputInputs);
+		Logger.recordOutput(funnelAvatiach.logPath() + "IsObjectInShooter", isObjectInShooter());
+		Logger.recordOutput(funnelAvatiach.logPath() + "IsObjectInAmp", isObjectInAmp());
 	}
 
 }

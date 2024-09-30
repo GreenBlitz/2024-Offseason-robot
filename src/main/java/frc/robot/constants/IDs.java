@@ -13,6 +13,6 @@ public class IDs {
 	);
 
 	public static final SparkMaxDeviceID BIG_FUNNEL = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
-	public static final SparkMaxDeviceID MIDDLE_FUNNEL = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
+	public static final SparkMaxDeviceID CHOOSER = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
 
 }
