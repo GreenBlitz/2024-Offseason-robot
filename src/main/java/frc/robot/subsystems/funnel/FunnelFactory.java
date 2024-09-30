@@ -6,7 +6,8 @@ public class FunnelFactory {
 
     public static FunnelStuff create(String logPath){
         return switch (Robot.ROBOT_TYPE){
-            case REAL ->
-        }
+            case REAL -> RealFunnelConstants.generateFunnelStuff(logPath);
+            case SIMULATION -> null;
+        };
     }
 }

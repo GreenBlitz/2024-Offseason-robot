@@ -85,4 +85,5 @@ public class FunnelCommandsBuilder {
     public Command stopMiddleFunnel() {
         return new InstantCommand(funnel::stopMiddleFunnel, funnel).withName("Stop middle funnel");
     }
+
 }
