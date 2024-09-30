@@ -1,6 +1,8 @@
 package frc.robot.subsystems.elevator;
 
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
+import frc.robot.hardware.request.IRequest;
+import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -9,6 +11,7 @@ public class Elevator extends GBSubsystem {
     private final DigitalInputInputsAutoLogged digitalInputsInputs;
     private final ElevatorCommandBuilder commandBuilder;
     private final ElevatorStuff elevatorStuff;
+    private final IRequest positionRequest;
     private double targetPosition;
 
     public Elevator(ElevatorStuff elevatorStuff) {
@@ -16,7 +19,11 @@ public class Elevator extends GBSubsystem {
         this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
         this.elevatorStuff = elevatorStuff;
         this.commandBuilder = new ElevatorCommandBuilder(this);
+        this.positionRequest = new SparkMaxDoubleRequest(targetPosition,
+                SparkMaxDoubleRequest.SparkDoubleRequestType.CURRENT,
+                0);
     }
+
 
     public ElevatorCommandBuilder getCommandBuilder() {
         return commandBuilder;
@@ -68,6 +75,6 @@ public class Elevator extends GBSubsystem {
     @Override
     protected void subsystemPeriodic() {
         Logger.processInputs(elevatorStuff.digitalInputsLogPath(), digitalInputsInputs);
-        elevatorStuff.mainMotor().;
+        elevatorStuff.mainMotor().applyDoubleRequest(positionRequest);
     }
 }

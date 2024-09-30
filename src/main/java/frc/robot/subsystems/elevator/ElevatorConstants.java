@@ -32,7 +32,8 @@ public class ElevatorConstants {
                 new SysIdRoutine.Config()
         );
 
-        Supplier<Double> position = () -> mainSparkMaxWrapper.getEncoder().getPosition();
+        Supplier<Double> mainMotorPosition = () -> mainSparkMaxWrapper.getEncoder().getPosition();
+        Supplier<Double> secondaryMotorPosition = () -> secondarySparkMaxWrapper.getEncoder().getPosition();
         secondarySparkMaxWrapper.follow(mainSparkMaxWrapper);
 
         return new ElevatorStuff(
@@ -40,6 +41,10 @@ public class ElevatorConstants {
                 logPath + "/digitalInputs",
                 mainMotor,
                 secondaryMotor,
+                0,
+                mainMotorPosition,
+                secondaryMotorPosition,
+
         );
     }
 
