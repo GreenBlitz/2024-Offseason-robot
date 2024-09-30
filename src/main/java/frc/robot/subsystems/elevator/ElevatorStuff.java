@@ -9,7 +9,6 @@ public record ElevatorStuff(
 	String logPath,
 	String digitalInputsLogPath,
 	ControllableMotor mainMotor,
-	IMotor secondaryMotor,
 	InputSignal<Double> voltageSignal,
 	InputSignal<Double> mainMotorPositionSignal,
 	InputSignal<Double> secondaryMotorPositionSignal,

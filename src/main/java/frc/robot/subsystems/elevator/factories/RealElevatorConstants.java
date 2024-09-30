@@ -57,7 +57,6 @@ public class RealElevatorConstants {
 			logPath,
 			logPath + "/digitalInputs",
 			mainMotor,
-			secondaryMotor,
 			motorsVoltageSignal,
 			mainMotorPositionSignal,
 			secondaryMotorPositionSignal,

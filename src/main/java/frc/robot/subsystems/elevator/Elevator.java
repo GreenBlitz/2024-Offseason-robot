@@ -1,6 +1,9 @@
 package frc.robot.subsystems.elevator;
 
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
+import frc.robot.hardware.digitalinput.IDigitalInput;
+import frc.robot.hardware.motor.ControllableMotor;
+import frc.robot.hardware.motor.IMotor;
 import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
 import frc.robot.subsystems.elevator.factories.RealElevatorConstants;
@@ -11,12 +14,21 @@ public class Elevator extends GBSubsystem {
 
 	private final DigitalInputInputsAutoLogged digitalInputsInputs;
 	private final ElevatorCommandBuilder commandBuilder;
-	private final ElevatorStuff elevatorStuff;
 	private final IRequest positionRequest;
 	private double targetPosition;
 
+    private final ElevatorStuff elevatorStuff;
+    private final ControllableMotor mainMotor;
+    private final IDigitalInput limitSwitch;
+    private final String digitalInputsLogPath;
+
 	public Elevator(ElevatorStuff elevatorStuff) {
 		super(elevatorStuff.logPath());
+
+        this.mainMotor = elevatorStuff.mainMotor();
+        this.limitSwitch = elevatorStuff.digitalInput();
+        this.digitalInputsLogPath = elevatorStuff.digitalInputsLogPath();
+
 		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
 		this.elevatorStuff = elevatorStuff;
 		this.commandBuilder = new ElevatorCommandBuilder(this);
@@ -54,12 +66,12 @@ public class Elevator extends GBSubsystem {
 		return digitalInputsInputs.debouncedValue;
 	}
 
-	public double getSynchronizingDelta() {
+	public double getSynchronationDelta() {
 		return elevatorStuff.mainMotorPositionSignal().getLatestValue() - elevatorStuff.secondaryMotorPositionSignal().getLatestValue();
 	}
 
 	public boolean emergencyStop() {
-		return getSynchronizingDelta() >= RealElevatorConstants.MAXIMUM_MOTORS_DELTA || isPhysicallyStopped();
+		return getSynchronationDelta() >= RealElevatorConstants.MAXIMUM_MOTORS_DELTA || isPhysicallyStopped();
 	}
 
 	public void checkEmergencyStop() {
@@ -69,13 +81,13 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public void updateInputs() {
-		elevatorStuff.digitalInput().updateInputs(digitalInputsInputs);
-		elevatorStuff.mainMotor().updateSignals();
+		limitSwitch.updateInputs(digitalInputsInputs);
+		mainMotor.updateSignals();
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
-		Logger.processInputs(elevatorStuff.digitalInputsLogPath(), digitalInputsInputs);
+		Logger.processInputs(digitalInputsLogPath, digitalInputsInputs);
 		positionRequest.withSetPoint(targetPosition);
 		checkEmergencyStop();
 	}
