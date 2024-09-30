@@ -27,8 +27,7 @@ public class FunnelCommandsBuilder {
 
     public Command setFunnelPower(DoubleSupplier power) {
         return new FunctionalCommand(
-                () -> {
-                },
+                () -> {},
                 () -> funnel.setPower(power.getAsDouble()),
                 interrupted -> funnel.stop(),
                 () -> false,
