@@ -3,7 +3,6 @@ package frc.robot.subsystems.elevator;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.motor.ControllableMotor;
-import frc.robot.hardware.motor.IMotor;
 import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
 import frc.robot.subsystems.elevator.factories.RealElevatorConstants;
@@ -17,17 +16,17 @@ public class Elevator extends GBSubsystem {
 	private final IRequest positionRequest;
 	private double targetPosition;
 
-    private final ElevatorStuff elevatorStuff;
-    private final ControllableMotor mainMotor;
-    private final IDigitalInput limitSwitch;
-    private final String digitalInputsLogPath;
+	private final ElevatorStuff elevatorStuff;
+	private final ControllableMotor mainMotor;
+	private final IDigitalInput limitSwitch;
+	private final String digitalInputsLogPath;
 
 	public Elevator(ElevatorStuff elevatorStuff) {
 		super(elevatorStuff.logPath());
 
-        this.mainMotor = elevatorStuff.mainMotor();
-        this.limitSwitch = elevatorStuff.digitalInput();
-        this.digitalInputsLogPath = elevatorStuff.digitalInputsLogPath();
+		this.mainMotor = elevatorStuff.mainMotor();
+		this.limitSwitch = elevatorStuff.digitalInput();
+		this.digitalInputsLogPath = elevatorStuff.digitalInputsLogPath();
 
 		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
 		this.elevatorStuff = elevatorStuff;

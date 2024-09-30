@@ -5,11 +5,11 @@ import frc.robot.subsystems.elevator.ElevatorStuff;
 
 public class ElevatorFactory {
 
-    public static ElevatorStuff create(String logPath) {
-        return switch (Robot.ROBOT_TYPE) {
-            case REAL -> RealElevatorConstants.generateElevatorStuff(logPath);
-            case SIMULATION -> null;
-        };
-    }
+	public static ElevatorStuff create(String logPath) {
+		return switch (Robot.ROBOT_TYPE) {
+			case REAL -> RealElevatorConstants.generateElevatorStuff(logPath);
+			case SIMULATION -> null;
+		};
+	}
 
 }

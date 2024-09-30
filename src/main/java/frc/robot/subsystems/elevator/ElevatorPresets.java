@@ -2,6 +2,7 @@ package frc.robot.subsystems.elevator;
 
 public enum ElevatorPresets {
 
+	// ! should check positions once we have a robot
 	SCORE(0),
 	AMP(0),
 	DEFAULT(0);
