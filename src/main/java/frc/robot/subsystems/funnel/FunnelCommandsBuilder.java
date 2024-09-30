@@ -9,13 +9,13 @@ import java.util.function.DoubleSupplier;
 
 public class FunnelCommandsBuilder {
 
-    private final Funnel funnel;
+	private final Funnel funnel;
 
-    public FunnelCommandsBuilder(Funnel funnel) {
-        this.funnel = funnel;
-    }
+	public FunnelCommandsBuilder(Funnel funnel) {
+		this.funnel = funnel;
+	}
 
-    //@formatter:off
+	//@formatter:off
     public Command setBigFunnelPower(double power) {
         return new FunctionalCommand(
                 () -> funnel.setPower(power),
@@ -47,11 +47,10 @@ public class FunnelCommandsBuilder {
                 funnel
         ).withName("Rotate funnel rotations: " + rotations);
     }
-
     //@formatter:on
 
-    public Command stopBigFunnel() {
-        return new InstantCommand(funnel::stop, funnel).withName("Stop funnel");
-    }
+	public Command stopBigFunnel() {
+		return new InstantCommand(funnel::stop, funnel).withName("Stop funnel");
+	}
 
 }
