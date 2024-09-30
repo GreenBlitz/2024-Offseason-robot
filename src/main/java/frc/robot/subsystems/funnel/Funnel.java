@@ -30,6 +30,10 @@ public class Funnel extends GBSubsystem {
 		update();
 	}
 
+	public FunnelCommandsBuilder getCommandsBuilder(){
+		return commandsBuilder;
+	}
+
 	public boolean isObjectInShooter() {
 		return shooterDigitalInputInputs.debouncedValue;
 	}
