@@ -26,6 +26,10 @@ public class Chooser extends GBSubsystem {
 		updateInputs();
 	}
 
+	public ChooserCommandsBuilder getCommandBuilder() {
+		return commandBuilder;
+	}
+
 	public boolean isObjectIn() {
 		return digitalInputInputs.debouncedValue;
 	}
