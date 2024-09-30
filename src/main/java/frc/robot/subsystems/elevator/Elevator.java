@@ -3,6 +3,7 @@ package frc.robot.subsystems.elevator;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.request.IRequest;
 import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
+import frc.robot.subsystems.elevator.factories.RealElevatorConstants;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -58,7 +59,7 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public boolean emergencyStop() {
-		return getSynchronizingDelta() >= ElevatorConstants.MAXIMUM_MOTORS_DELTA || isPhysicallyStopped();
+		return getSynchronizingDelta() >= RealElevatorConstants.MAXIMUM_MOTORS_DELTA || isPhysicallyStopped();
 	}
 
 	public void checkEmergencyStop() {
