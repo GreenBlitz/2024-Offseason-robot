@@ -57,7 +57,7 @@ public class Chooser extends GBSubsystem {
 	}
 
 	public boolean isAtPosition(Rotation2d position) {
-		return (getPosition().getRotations() - position.getRotations() <= 5);
+		return getPosition().getRotations() - position.getRotations() <= 5;
 	}
 
 	public boolean isPastPosition() {
