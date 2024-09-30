@@ -25,7 +25,7 @@ public class RealFunnelConstants {
 
 
 	public static FunnelStuff generateFunnelStuff(String logPath) {
-		SparkMaxWrapper wrapper = new SparkMaxWrapper(IDs.BIG_FUNNEL);
+		SparkMaxWrapper wrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.FUNNEL);
 		SysIdRoutine.Config config = new SysIdRoutine.Config();
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, wrapper, config);
 

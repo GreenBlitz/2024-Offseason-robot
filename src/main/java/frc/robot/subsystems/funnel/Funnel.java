@@ -11,11 +11,11 @@ public class Funnel extends GBSubsystem {
 
 	private final IMotor motor;
 	private final FunnelStuff funnelStuff;
+	private final FunnelCommandsBuilder commandsBuilder;
 	private final IDigitalInput shooterDigitalInput;
 	private final IDigitalInput ampDigitalInput;
 	private final DigitalInputInputsAutoLogged shooterDigitalInputInputs;
 	private final DigitalInputInputsAutoLogged ampDigitalInputInputs;
-	private Rotation2d targetPosition;
 
 	public Funnel(FunnelStuff funnelStuff) {
 		super(funnelStuff.logPath());
@@ -26,7 +26,7 @@ public class Funnel extends GBSubsystem {
 		this.shooterDigitalInputInputs = new DigitalInputInputsAutoLogged();
 		this.ampDigitalInputInputs = new DigitalInputInputsAutoLogged();
 
-		this.targetPosition = new Rotation2d();
+		commandsBuilder = new FunnelCommandsBuilder(this);
 		update();
 	}
 
@@ -54,22 +54,6 @@ public class Funnel extends GBSubsystem {
 
 	public void setBrake(boolean brake) {
 		motor.setBrake(brake);
-	}
-
-	public Rotation2d getPosition() {
-		return funnelStuff.positionSignal().getLatestValue();
-	}
-
-	public void setTargetPosition(double rotations) {
-		this.targetPosition = Rotation2d.fromRotations(getPosition().getRotations() + rotations);
-	}
-
-	public boolean isAtPosition(Rotation2d position) {
-		return (getPosition().getRotations() - position.getRotations() <= 5);
-	}
-
-	public boolean isPastPosition() {
-		return getPosition().getRotations() > targetPosition.getRotations();
 	}
 
 	@Override
