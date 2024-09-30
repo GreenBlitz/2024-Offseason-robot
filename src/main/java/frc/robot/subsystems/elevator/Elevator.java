@@ -1,47 +1,73 @@
 package frc.robot.subsystems.elevator;
 
-import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
-import frc.robot.hardware.motor.IMotor;
 import frc.utils.GBSubsystem;
+import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends GBSubsystem {
 
-    private final IMotor mainMotor;
-    private final IMotor secondaryMotor;
-    private final IDigitalInput digitalInput;
     private final DigitalInputInputsAutoLogged digitalInputsInputs;
     private final ElevatorCommandBuilder commandBuilder;
     private final ElevatorStuff elevatorStuff;
-    private double TargetPosition;
+    private double targetPosition;
 
     public Elevator(ElevatorStuff elevatorStuff) {
         super(elevatorStuff.logPath());
-        this.mainMotor = elevatorStuff.mainMotor();
-        this.secondaryMotor = elevatorStuff.secondaryMotor();
-        this.digitalInput = elevatorStuff.digitalInput();
         this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
         this.elevatorStuff = elevatorStuff;
-        this.commandBuilder = new ElevatorCommandBuilder();
+        this.commandBuilder = new ElevatorCommandBuilder(this);
     }
 
     public ElevatorCommandBuilder getCommandBuilder() {
         return commandBuilder;
     }
 
-    public boolean isStopped() {
+    public void setPower(double target) {
+        targetPosition = target;
+    }
+
+    public void stop() {
+        elevatorStuff.mainMotor().stop();
+    }
+
+    public void setBrake(boolean brake) {
+        elevatorStuff.mainMotor().setBrake(brake);
+    }
+
+    public void setTargetPosition(double position) {
+        targetPosition = position;
+    }
+
+    public double getTargetPosition() {
+        return targetPosition;
+    }
+
+    public boolean isPhysicallyStopped() {
         return digitalInputsInputs.debouncedValue;
     }
 
-    public double synchronizingDelta() {
+    public double getSynchronizingDelta() {
         return elevatorStuff.mainMotorPositionSignal().getLatestValue().getRadians() - elevatorStuff.secondaryMotorPositionSignal().getLatestValue().getRadians();
     }
 
-
-
-    public void updateInputs() {
-        digitalInput.updateInputs(digitalInputsInputs);
-        mainMotor.updateSignals();
+    public boolean emergencyStop() {
+        return getSynchronizingDelta() >= ElevatorConstants.MAXIMUM_MOTORS_DELTA || isPhysicallyStopped();
     }
 
+    public void checkEmergancyStop() {
+        if (emergencyStop()) {
+            stop();
+        }
+    }
+
+    public void updateInputs() {
+        elevatorStuff.digitalInput().updateInputs(digitalInputsInputs);
+        elevatorStuff.mainMotor().updateSignals();
+    }
+
+    @Override
+    protected void subsystemPeriodic() {
+        Logger.processInputs(elevatorStuff.digitalInputsLogPath(), digitalInputsInputs);
+        elevatorStuff.mainMotor().;
+    }
 }

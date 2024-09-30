@@ -13,6 +13,8 @@ public class ElevatorConstants {
     private final static double DEBOUNCE_TIME_PHYSICAL_LIMIT = 0.03;
 
     private final static double GEAR_RATIO = .3; //TODO: check this later
+    
+    protected final static double MAXIMUM_MOTORS_DELTA = 0.01;
 
     public static ElevatorStuff generateElevatorStuff(String logPath) {
         SparkMaxWrapper mainSparkMaxWrapper = new SparkMaxWrapper(IDs.ELEVATOR_FIRST_MOTOR);
