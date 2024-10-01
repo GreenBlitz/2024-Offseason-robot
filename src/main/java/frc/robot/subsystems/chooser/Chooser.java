@@ -34,21 +34,21 @@ public class Chooser extends GBSubsystem {
 		return digitalInputInputs.debouncedValue;
 	}
 
-	public void updateInputs() {
-		digitalInput.updateInputs(digitalInputInputs);
-		motor.updateSignals(chooserStuff.voltageSignal(), chooserStuff.positionSignal());
-	}
-
-	public void setPower(double power) {
-		motor.setPower(power);
+	public void setBrake(boolean brake) {
+		motor.setBrake(brake);
 	}
 
 	public void stop() {
 		motor.stop();
 	}
 
-	public void setBrake(boolean brake) {
-		motor.setBrake(brake);
+	public void setPower(double power) {
+		motor.setPower(power);
+	}
+
+	public void updateInputs() {
+		digitalInput.updateInputs(digitalInputInputs);
+		motor.updateSignals(chooserStuff.voltageSignal(), chooserStuff.positionSignal());
 	}
 
 	@Override
