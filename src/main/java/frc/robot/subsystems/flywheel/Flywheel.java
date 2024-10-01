@@ -10,6 +10,7 @@ public class Flywheel extends GBSubsystem {
 	private final FlywheelComponents flywheelComponents;
 	private final ControllableMotor topMotor;
 	private final ControllableMotor bottomMotor;
+	private final FlywheelCommandBuilder commandBuilder;
 
 	public Flywheel(FlywheelComponents flywheelComponents) {
 		super(flywheelComponents.logPath());
@@ -17,6 +18,7 @@ public class Flywheel extends GBSubsystem {
 		this.flywheelComponents = flywheelComponents;
 		this.topMotor = flywheelComponents.topMotor();
 		this.bottomMotor = flywheelComponents.bottomMotor();
+		this.commandBuilder = new FlywheelCommandBuilder(this);
 	}
 
 	public double getTopMotorVoltage() {
@@ -34,17 +36,16 @@ public class Flywheel extends GBSubsystem {
 
 	public void setTargetVelocity(Rotation2d targetVelocityRPS) {
 		topMotor.applyAngleRequest(flywheelComponents.topMotorVelocityRequest().withSetPoint(targetVelocityRPS));
-		topMotor.applyAngleRequest(flywheelComponents.bottomMotorVelocityRequest().withSetPoint(targetVelocityRPS));
+		bottomMotor.applyAngleRequest(flywheelComponents.bottomMotorVelocityRequest().withSetPoint(targetVelocityRPS));
 	}
 
 	public boolean isAtVelocity(Rotation2d targetVelocityRPS, Rotation2d velocityTolerance) {
 		return MathUtil.isNear(
 			targetVelocityRPS.getRotations(),
-			flywheelComponents.topMotorVelocitySignal().getLatestValue(),
+			flywheelComponents.topMotorVelocitySignal().getLatestValue().getRotations(),
 			velocityTolerance.getRotations()
 		);
 	}
-
 
 	public void stop() {
 		topMotor.setPower(0);
@@ -65,6 +66,5 @@ public class Flywheel extends GBSubsystem {
 	protected void subsystemPeriodic() {
 		updateInputs();
 	}
-
 
 }

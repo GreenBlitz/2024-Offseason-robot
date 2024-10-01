@@ -16,8 +16,8 @@ import java.util.function.Supplier;
 public class RealFlywheelConstants {
 
 	public static FlywheelComponents generateFlywheelComponents(String logpath, boolean isTopMotorInverted) {
-		SparkMaxWrapper topSparkMaxWrapper = new SparkMaxWrapper(IDs.TOP_FLYWHEEL_MOTOR);
-		SparkMaxWrapper bottomSparkMaxWrapper = new SparkMaxWrapper(IDs.BOTTOM_FLYWHEEL_MOTOR);
+		SparkMaxWrapper topSparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMaxIDs.TOP_FLYWHEEL_MOTOR);
+		SparkMaxWrapper bottomSparkMaxWrapper = new SparkMaxWrapper(IDs.CANSparkMaxIDs.BOTTOM_FLYWHEEL_MOTOR);
 
 		SysIdRoutine.Config topConfig = new SysIdRoutine.Config();
 		SysIdRoutine.Config bottomConfig = new SysIdRoutine.Config();
@@ -25,10 +25,10 @@ public class RealFlywheelConstants {
 		BrushlessSparkMAXMotor topMotor = new BrushlessSparkMAXMotor(logpath, topSparkMaxWrapper, topConfig);
 		BrushlessSparkMAXMotor bottomMotor = new BrushlessSparkMAXMotor(logpath, bottomSparkMaxWrapper, bottomConfig);
 
-		Supplier<Double> topMotorVoltageSupplier = () -> (topSparkMaxWrapper.getBusVoltage() * topSparkMaxWrapper.getAppliedOutput());
+		Supplier<Double> topMotorVoltageSupplier = () -> topSparkMaxWrapper.getBusVoltage() * topSparkMaxWrapper.getAppliedOutput();
 		SparkMaxDoubleSignal topMotorVoltageSignal = new SparkMaxDoubleSignal("Top flywheel motor voltage Signal", topMotorVoltageSupplier);
 
-		Supplier<Double> bottomMotorVoltageSupplier = () -> (topSparkMaxWrapper.getBusVoltage() * topSparkMaxWrapper.getAppliedOutput());
+		Supplier<Double> bottomMotorVoltageSupplier = () -> topSparkMaxWrapper.getBusVoltage() * topSparkMaxWrapper.getAppliedOutput();
 		SparkMaxDoubleSignal bottomMotorVoltageSignal = new SparkMaxDoubleSignal(
 			"Bottom flywheel motor voltage Signal",
 			bottomMotorVoltageSupplier
