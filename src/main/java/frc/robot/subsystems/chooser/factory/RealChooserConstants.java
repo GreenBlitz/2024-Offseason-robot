@@ -9,6 +9,8 @@ import frc.robot.hardware.motor.sparkmax.BrushlessSparkMAXMotor;
 import frc.robot.hardware.motor.sparkmax.SparkMaxWrapper;
 import frc.robot.hardware.signal.cansparkmax.SparkMaxAngleSignal;
 import frc.robot.hardware.signal.cansparkmax.SparkMaxDoubleSignal;
+import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
+import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.chooser.ChooserStuff;
 import frc.utils.AngleUnit;
 
@@ -27,10 +29,10 @@ public class RealChooserConstants {
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMAXWrapper, config);
 
 		Supplier<Double> voltage = () -> sparkMAXWrapper.getBusVoltage() * sparkMAXWrapper.getAppliedOutput();
-		SparkMaxDoubleSignal voltageSignal = new SparkMaxDoubleSignal("voltage", voltage);
+		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", voltage);
 
 		Supplier<Double> position = () -> sparkMAXWrapper.getEncoder().getPosition();
-		SparkMaxAngleSignal positionSignal = new SparkMaxAngleSignal("position", position, AngleUnit.ROTATIONS);
+		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("position", position, AngleUnit.ROTATIONS);
 
 		BooleanSupplier isBeamBroken = () -> sparkMAXWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
 		sparkMAXWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
