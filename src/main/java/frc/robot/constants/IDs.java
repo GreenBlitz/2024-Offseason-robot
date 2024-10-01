@@ -1,6 +1,8 @@
 package frc.robot.constants;
 
+import com.revrobotics.CANSparkLowLevel;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import frc.robot.hardware.motor.sparkmax.SparkMaxDeviceID;
 import frc.utils.battery.PowerDistributionDeviceID;
 
 public class IDs {
@@ -9,5 +11,8 @@ public class IDs {
 		20,
 		PowerDistribution.ModuleType.kRev
 	);
+
+	public static final SparkMaxDeviceID TOP_NEO = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
+	public static final SparkMaxDeviceID BOTTOM_NEO = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
 
 }
