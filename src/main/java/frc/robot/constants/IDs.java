@@ -13,7 +13,9 @@ public class IDs {
 	);
 
 	public static class CANSparkMAXIDs {
+
 		public static final SparkMaxDeviceID FUNNEL = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
+
 	}
 
 }
