@@ -19,7 +19,6 @@ public class RealChooserConstants {
 
 	private final static double DEBOUNCE_TIME_SECONDS = 0.05;
 	private final static Debouncer.DebounceType DEBOUNCE_TYPE = Debouncer.DebounceType.kBoth;
-
 	private final static SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
 
 	public static ChooserStuff generateChooserStuff(String logPath) {
