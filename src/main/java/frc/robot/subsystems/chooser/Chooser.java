@@ -30,7 +30,7 @@ public class Chooser extends GBSubsystem {
 		return commandBuilder;
 	}
 
-	public boolean isObjectIn() {
+	public boolean isNoteIn() {
 		return digitalInputInputs.debouncedValue;
 	}
 
