@@ -26,10 +26,10 @@ public class FunnelCommandsBuilder {
         ).withName("Set funnel power: " + power);
     }
 
-    public Command setFunnelPower(Supplier<Double> power) {
+    public Command setFunnelPower(DoubleSupplier power) {
         return new FunctionalCommand(
                 () -> {},
-                () -> funnel.setPower(power.get()),
+                () -> funnel.setPower(power.getAsDouble()),
                 interrupted -> funnel.stop(),
                 () -> false,
                 funnel

@@ -27,22 +27,22 @@ public class Funnel extends GBSubsystem {
 		this.ampDigitalInputInputs = new DigitalInputInputsAutoLogged();
 
 		commandsBuilder = new FunnelCommandsBuilder(this);
-		update();
+		updateInputs();
 	}
 
 	public FunnelCommandsBuilder getCommandsBuilder(){
 		return commandsBuilder;
 	}
 
-	public boolean isObjectInShooter() {
+	public boolean isNoteInShooter() {
 		return shooterDigitalInputInputs.debouncedValue;
 	}
 
-	public boolean isObjectInAmp() {
+	public boolean isNoteInAmp() {
 		return ampDigitalInputInputs.debouncedValue;
 	}
 
-	public void update() {
+	public void updateInputs() {
 		shooterDigitalInput.updateInputs(shooterDigitalInputInputs);
 		ampDigitalInput.updateInputs(ampDigitalInputInputs);
 		motor.updateSignals(funnelStuff.voltageSignal(), funnelStuff.positionSignal());
@@ -62,11 +62,9 @@ public class Funnel extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {
-		update();
+		updateInputs();
 		Logger.processInputs(funnelStuff.shooterDigitalInputLogPath(), shooterDigitalInputInputs);
 		Logger.processInputs(funnelStuff.ampDigitalInputLogPath(), ampDigitalInputInputs);
-		Logger.recordOutput(funnelStuff.logPath() + "IsObjectInShooter", isObjectInShooter());
-		Logger.recordOutput(funnelStuff.logPath() + "IsObjectInAmp", isObjectInAmp());
 	}
 
 }
