@@ -19,6 +19,8 @@ public class Flywheel extends GBSubsystem {
 		this.topMotor = flywheelComponents.topMotor();
 		this.bottomMotor = flywheelComponents.bottomMotor();
 		this.commandBuilder = new FlywheelCommandBuilder(this);
+
+		updateInputs();
 	}
 
 	public double getTopMotorVoltage() {
@@ -27,6 +29,10 @@ public class Flywheel extends GBSubsystem {
 
 	public double getBottomMotorVoltage() {
 		return flywheelComponents.bottomMotorVoltageSignal().getLatestValue();
+	}
+
+	public FlywheelCommandBuilder getCommandBuilder() {
+		return commandBuilder;
 	}
 
 	public void setPower(double power) {
