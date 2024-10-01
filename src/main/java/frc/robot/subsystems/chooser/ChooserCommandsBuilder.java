@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class ChooserCommandsBuilder {
@@ -25,10 +26,10 @@ public class ChooserCommandsBuilder {
 		).withName("Set chooser power: " + power);
     }
 
-    public Command setPower(Supplier<Double> power) {
+    public Command setPower(DoubleSupplier power) {
         return new FunctionalCommand(
 				() -> {},
-				() -> chooser.setPower(power.get()),
+				() -> chooser.setPower(power.getAsDouble()),
 				interrupted -> chooser.stop(),
 				() -> false,
 				chooser

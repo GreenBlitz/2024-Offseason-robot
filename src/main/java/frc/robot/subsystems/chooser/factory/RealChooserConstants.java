@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 
 public class RealChooserConstants {
 
-	private final static double DEBOUNCE_TIME_SECONDS = 0.05;
+	private final static double DEBOUNCE_TIME = 0.05;
 	private final static Debouncer.DebounceType DEBOUNCE_TYPE = Debouncer.DebounceType.kBoth;
 
 	private final static SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
@@ -35,7 +35,7 @@ public class RealChooserConstants {
 
 		BooleanSupplier isBeamBroke = () -> wrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
 		wrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
-		SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isBeamBroke, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
+		SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isBeamBroke, DEBOUNCE_TYPE, DEBOUNCE_TIME);
 
 		return new ChooserStuff(logPath, motor, voltageSignal, positionSignal, beamBreaker);
 	}
