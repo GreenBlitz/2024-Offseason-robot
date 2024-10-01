@@ -1,6 +1,5 @@
 package frc.robot.hardware.flywheel;
 
-import com.revrobotics.CANSparkBase;
 import frc.robot.hardware.motor.IMotor;
 import frc.utils.GBSubsystem;
 
@@ -34,11 +33,10 @@ public class Flywheel extends GBSubsystem {
 
 	public void setVoltage(double voltage) {
 		topMotor.setPower(voltage);
-
 	}
 
 	public void setVelocity(double power) {
-		//to do
+		// to do
 	}
 
 	public void stop() {

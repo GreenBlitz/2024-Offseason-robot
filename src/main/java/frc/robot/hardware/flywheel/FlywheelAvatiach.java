@@ -14,6 +14,6 @@ public record FlywheelAvatiach(
 	InputSignal<Double> bottomMotorVoltageSignal,
 	InputSignal<Double> topMotorVelocitySignal,
 	InputSignal<Double> bottomMotorVelocitySignal,
-    PIDController pidController
+	PIDController pidController
 
 ) {}
