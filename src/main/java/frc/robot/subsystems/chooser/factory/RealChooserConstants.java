@@ -26,7 +26,7 @@ public class RealChooserConstants {
 		SysIdRoutine.Config config = new SysIdRoutine.Config();
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMAXWrapper, config);
 
-		Supplier<Double> voltage = () -> sparkMAXWrapper.getBusVoltage() * sparkMAXWrapper.getAppliedOutput();
+		Supplier<Double> voltage = sparkMAXWrapper::getVoltage;
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", voltage);
 
 		Supplier<Double> position = () -> sparkMAXWrapper.getEncoder().getPosition();

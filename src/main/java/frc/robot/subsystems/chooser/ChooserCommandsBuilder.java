@@ -22,7 +22,7 @@ public class ChooserCommandsBuilder {
 				interrupted -> chooser.stop(),
 				() -> false,
 				chooser
-		).withName("Set chooser power: " + power);
+		).withName("Set power: " + power);
     }
 
     public Command setPower(DoubleSupplier power) {
@@ -32,12 +32,12 @@ public class ChooserCommandsBuilder {
 				interrupted -> chooser.stop(),
 				() -> false,
 				chooser
-		).withName("Set chooser power by supplier");
+		).withName("Set power by supplier");
     }
 	//@formatter:on
 
 	public Command stop() {
-		return new RunCommand(chooser::stop, chooser).withName("Stop chooser");
+		return new RunCommand(chooser::stop, chooser).withName("Stop");
 	}
 
 }
