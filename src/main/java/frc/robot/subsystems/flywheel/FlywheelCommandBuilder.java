@@ -18,8 +18,8 @@ public class FlywheelCommandBuilder {
 
 	public Command setPower(double power) {
 		return new FunctionalCommand(
-				() -> flywheel.setPower(power),
 				() -> {},
+				() -> flywheel.setPower(power),
 				interrupted -> flywheel.stop(),
 				() -> false,
 				flywheel
