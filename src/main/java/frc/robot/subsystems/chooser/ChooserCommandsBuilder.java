@@ -19,8 +19,8 @@ public class ChooserCommandsBuilder {
 	//@formatter:off
 	public Command setPower(double power) {
         return new FunctionalCommand(
-				() -> chooser.setPower(power),
 				() -> {},
+				() -> chooser.setPower(power),
 				interrupted -> chooser.stop(),
 				() -> false,
 				chooser

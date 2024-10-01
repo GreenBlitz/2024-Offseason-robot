@@ -1,6 +1,5 @@
 package frc.robot.subsystems.chooser;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.motor.IMotor;
@@ -11,7 +10,7 @@ public class Chooser extends GBSubsystem {
 
 	private final IMotor motor;
 	private final ChooserStuff chooserStuff;
-	private final ChooserCommandsBuilder commandBuilder;
+	private final ChooserCommandsBuilder commandsBuilder;
 	private final IDigitalInput digitalInput;
 	private final DigitalInputInputsAutoLogged digitalInputInputs;
 
@@ -22,15 +21,16 @@ public class Chooser extends GBSubsystem {
 		this.chooserStuff = chooserStuff;
 		this.digitalInputInputs = new DigitalInputInputsAutoLogged();
 
-		this.commandBuilder = new ChooserCommandsBuilder(this);
+		this.commandsBuilder = new ChooserCommandsBuilder(this);
+
 		updateInputs();
 	}
 
-	public ChooserCommandsBuilder getCommandBuilder() {
-		return commandBuilder;
+	public ChooserCommandsBuilder getCommandsBuilder() {
+		return commandsBuilder;
 	}
 
-	public boolean isNoteIn() {
+	public boolean isObjectIn() {
 		return digitalInputInputs.debouncedValue;
 	}
 
