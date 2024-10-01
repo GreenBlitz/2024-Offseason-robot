@@ -12,7 +12,7 @@ public class IDs {
 		PowerDistribution.ModuleType.kRev
 	);
 
-	public static final SparkMaxDeviceID TOP_NEO = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
-	public static final SparkMaxDeviceID BOTTOM_NEO = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
+	public static final SparkMaxDeviceID TOP_FLYWHEEL_MOTOR = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
+	public static final SparkMaxDeviceID BOTTOM_FLYWHEEL_MOTOR = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
 
 }
