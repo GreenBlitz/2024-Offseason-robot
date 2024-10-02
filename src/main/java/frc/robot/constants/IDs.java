@@ -15,7 +15,7 @@ public class IDs {
 
 	public static class CANSparkMAXIDs {
 
-		public static final SparkMaxDeviceID CHOOSER = new SparkMaxDeviceID(1, CANSparkLowLevel.MotorType.kBrushless);
+		public static final SparkMaxDeviceID CHOOSER = new SparkMaxDeviceID(0, CANSparkLowLevel.MotorType.kBrushless);
 
 	}
 
