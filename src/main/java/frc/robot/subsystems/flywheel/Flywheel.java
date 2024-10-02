@@ -12,7 +12,7 @@ public class Flywheel extends GBSubsystem {
 
 	private final ControllableMotor topMotor;
 	private final ControllableMotor bottomMotor;
-	private final FlywheelCommandBuilder commandBuilder;
+	private final FlywheelCommandsBuilder commandsBuilder;
 
 	public Flywheel(TopFlywheelComponents topFlywheelComponents, BottomFlywheelComponents bottomFlywheelComponents) {
 		super(FlywheelConstants.LOG_PATH);
@@ -21,7 +21,7 @@ public class Flywheel extends GBSubsystem {
 		this.bottomFlywheelComponents = bottomFlywheelComponents;
 		this.topMotor = topFlywheelComponents.motor();
 		this.bottomMotor = bottomFlywheelComponents.motor();
-		this.commandBuilder = new FlywheelCommandBuilder(this);
+		this.commandsBuilder = new FlywheelCommandsBuilder(this);
 
 		updateInputs();
 	}
@@ -34,21 +34,21 @@ public class Flywheel extends GBSubsystem {
 		return bottomFlywheelComponents.motorVoltageSignal().getLatestValue();
 	}
 
-	public FlywheelCommandBuilder getCommandBuilder() {
-		return commandBuilder;
+	public FlywheelCommandsBuilder getCommandsBuilder() {
+		return commandsBuilder;
 	}
 
-	public void setPower(double power) {
+	protected void setPower(double power) {
 		topMotor.setPower(power);
 		bottomMotor.setPower(power);
 	}
 
-	public void setTargetVelocity(Rotation2d targetVelocity) {
+	protected void setTargetVelocity(Rotation2d targetVelocity) {
 		topMotor.applyAngleRequest(topFlywheelComponents.motorVelocityRequest().withSetPoint(targetVelocity));
 		bottomMotor.applyAngleRequest(bottomFlywheelComponents.motorVelocityRequest().withSetPoint(targetVelocity));
 	}
 
-	public boolean isAtVelocity(Rotation2d targetVelocity, Rotation2d velocityTolerance) {
+	protected boolean isAtVelocity(Rotation2d targetVelocity, Rotation2d velocityTolerance) {
 		return MathUtil.isNear(
 			targetVelocity.getRotations(),
 			topFlywheelComponents.motorVelocitySignal().getLatestValue().getRotations(),
@@ -56,12 +56,12 @@ public class Flywheel extends GBSubsystem {
 		);
 	}
 
-	public void stop() {
+	protected void stop() {
 		topMotor.stop();
 		bottomMotor.stop();
 	}
 
-	public void updateInputs() {
+	protected void updateInputs() {
 		topMotor.updateSignals(topFlywheelComponents.motorVoltageSignal(), topFlywheelComponents.motorVelocitySignal());
 		bottomMotor.updateSignals(bottomFlywheelComponents.motorVoltageSignal(), bottomFlywheelComponents.motorVelocitySignal());
 	}
