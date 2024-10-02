@@ -45,12 +45,12 @@ public class Chooser extends GBSubsystem {
 	public void updateInputs() {
 		digitalInput.updateInputs(digitalInputInputs);
 		motor.updateSignals(chooserStuff.voltageSignal());
+		Logger.processInputs(chooserStuff.digitalInputLogPath(), digitalInputInputs);
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
-		Logger.processInputs(chooserStuff.digitalInputLogPath(), digitalInputInputs);
 		Logger.recordOutput(chooserStuff.digitalInputLogPath() + "isNoteIn", isNoteIn());
 	}
 
