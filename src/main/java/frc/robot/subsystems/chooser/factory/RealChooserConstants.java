@@ -1,5 +1,6 @@
 package frc.robot.subsystems.chooser.factory;
 
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.SparkLimitSwitch;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -28,6 +29,7 @@ public class RealChooserConstants {
 		sparkMAXWrapper.setSmartCurrentLimit(30);
 		sparkMAXWrapper.getEncoder().setPositionConversionFactor(1);
 		sparkMAXWrapper.getEncoder().setVelocityConversionFactor(1);
+		sparkMAXWrapper.setIdleMode(CANSparkBase.IdleMode.kCoast);
 
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMAXWrapper, config);
 

@@ -55,6 +55,7 @@ public class Chooser extends GBSubsystem {
 	protected void subsystemPeriodic() {
 		updateInputs();
 		Logger.processInputs(chooserStuff.digitalInputLogPath(), digitalInputInputs);
+		Logger.recordOutput("isNoteIn", digitalInputInputs.debouncedValue);
 	}
 
 }
