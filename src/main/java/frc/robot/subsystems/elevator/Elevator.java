@@ -19,14 +19,12 @@ public class Elevator extends GBSubsystem {
 	private final ElevatorStuff elevatorStuff;
 	private final ControllableMotor mainMotor;
 	private final IDigitalInput limitSwitch;
-	private final String digitalInputsLogPath;
 
 	public Elevator(ElevatorStuff elevatorStuff) {
 		super(elevatorStuff.logPath());
 
 		this.mainMotor = elevatorStuff.mainMotor();
 		this.limitSwitch = elevatorStuff.digitalInput();
-		this.digitalInputsLogPath = elevatorStuff.digitalInputsLogPath();
 
 		this.digitalInputsInputs = new DigitalInputInputsAutoLogged();
 		this.elevatorStuff = elevatorStuff;
@@ -65,20 +63,6 @@ public class Elevator extends GBSubsystem {
 		return digitalInputsInputs.debouncedValue;
 	}
 
-	public double getSynchronationDelta() {
-		return elevatorStuff.mainMotorPositionSignal().getLatestValue() - elevatorStuff.secondaryMotorPositionSignal().getLatestValue();
-	}
-
-	public boolean emergencyStop() {
-		return getSynchronationDelta() >= RealElevatorConstants.MAXIMUM_MOTORS_DELTA || isPhysicallyStopped();
-	}
-
-	public void checkEmergencyStop() {
-		if (emergencyStop()) {
-			stop();
-		}
-	}
-
 	public void updateInputs() {
 		limitSwitch.updateInputs(digitalInputsInputs);
 		mainMotor.updateSignals();
@@ -86,9 +70,9 @@ public class Elevator extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {
-		Logger.processInputs(digitalInputsLogPath, digitalInputsInputs);
+		updateInputs();
+		Logger.processInputs(elevatorStuff.digitalInputsLogPath(), digitalInputsInputs);
 		positionRequest.withSetPoint(targetPosition);
-		checkEmergencyStop();
 	}
 
 }

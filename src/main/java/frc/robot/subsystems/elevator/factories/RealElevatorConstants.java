@@ -1,5 +1,6 @@
 package frc.robot.subsystems.elevator.factories;
 
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.SparkLimitSwitch;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.IDs;
@@ -22,6 +23,10 @@ public class RealElevatorConstants {
 
 	private final static Debouncer.DebounceType DEBOUNCE_TYPE = Debouncer.DebounceType.kBoth;
 
+	private final static CANSparkBase.SoftLimitDirection SOFT_LIMIT_DIRECTION = CANSparkBase.SoftLimitDirection.kReverse;
+
+	private final static float SOFT_LIMIT_VALUE = 0;
+
 	private final static double DEBOUNCE_TIME_PHYSICAL_LIMIT = 0.03;
 
 	private final static double GEAR_RATIO = .3; // TODO: check this later
@@ -40,9 +45,11 @@ public class RealElevatorConstants {
 
 		Supplier<Double> mainMotorPosition = () -> mainSparkMaxWrapper.getEncoder().getPosition();
 		SparkMaxDoubleSignal mainMotorPositionSignal = new SparkMaxDoubleSignal("motor position", mainMotorPosition);
+		mainSparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, SOFT_LIMIT_VALUE);
 
 		Supplier<Double> secondaryMotorPosition = () -> secondarySparkMaxWrapper.getEncoder().getPosition();
 		SparkMaxDoubleSignal secondaryMotorPositionSignal = new SparkMaxDoubleSignal("motor position", secondaryMotorPosition);
+		mainSparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, SOFT_LIMIT_VALUE);
 
 		Supplier<Double> motorsVoltage = () -> (mainSparkMaxWrapper.getBusVoltage() * secondarySparkMaxWrapper.getAppliedOutput());
 		SparkMaxDoubleSignal motorsVoltageSignal = new SparkMaxDoubleSignal("motor position", motorsVoltage);
