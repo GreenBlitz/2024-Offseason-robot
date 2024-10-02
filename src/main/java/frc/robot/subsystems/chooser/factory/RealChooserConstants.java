@@ -27,22 +27,17 @@ public class RealChooserConstants {
 		SysIdRoutine.Config config = new SysIdRoutine.Config();
 
 		sparkMAXWrapper.setSmartCurrentLimit(30);
-		sparkMAXWrapper.getEncoder().setPositionConversionFactor(1);
-		sparkMAXWrapper.getEncoder().setVelocityConversionFactor(1);
 		sparkMAXWrapper.setIdleMode(CANSparkBase.IdleMode.kCoast);
 
 		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMAXWrapper, config);
 
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMAXWrapper::getVoltage);
 
-		Supplier<Double> position = () -> sparkMAXWrapper.getEncoder().getPosition();
-		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("position", position, AngleUnit.ROTATIONS);
-
 		BooleanSupplier isBeamBroken = () -> sparkMAXWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
 		sparkMAXWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(false);
 		SuppliedDigitalInput beamBreaker = new SuppliedDigitalInput(isBeamBroken, DEBOUNCE_TYPE, DEBOUNCE_TIME_SECONDS);
 
-		return new ChooserStuff(logPath, motor, voltageSignal, positionSignal, beamBreaker);
+		return new ChooserStuff(logPath, motor, voltageSignal, beamBreaker);
 	}
 
 }

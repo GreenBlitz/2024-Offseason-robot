@@ -48,7 +48,7 @@ public class Chooser extends GBSubsystem {
 
 	public void updateInputs() {
 		digitalInput.updateInputs(digitalInputInputs);
-		motor.updateSignals(chooserStuff.voltageSignal(), chooserStuff.positionSignal());
+		motor.updateSignals(chooserStuff.voltageSignal());
 	}
 
 	@Override

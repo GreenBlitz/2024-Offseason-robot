@@ -10,7 +10,6 @@ public record ChooserStuff(
 	String digitalInputLogPath,
 	IMotor motor,
 	InputSignal<Double> voltageSignal,
-	InputSignal<Rotation2d> positionSignal,
 	IDigitalInput digitalInput
 ) {
 
@@ -18,10 +17,9 @@ public record ChooserStuff(
 		String logPath,
 		IMotor motor,
 		InputSignal<Double> voltageSignal,
-		InputSignal<Rotation2d> positionSignal,
 		IDigitalInput digitalInput
 	) {
-		this(logPath, logPath + "digitalInput", motor, voltageSignal, positionSignal, digitalInput);
+		this(logPath, logPath + "digitalInput", motor, voltageSignal, digitalInput);
 	}
 
 }
