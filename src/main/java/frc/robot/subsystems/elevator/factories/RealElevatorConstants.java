@@ -62,7 +62,6 @@ public class RealElevatorConstants {
 
 		return new ElevatorStuff(
 			logPath,
-			logPath + "/digitalInputs",
 			mainMotor,
 			motorsVoltageSignal,
 			mainMotorPositionSignal,

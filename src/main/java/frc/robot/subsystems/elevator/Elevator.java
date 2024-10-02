@@ -1,11 +1,12 @@
 package frc.robot.subsystems.elevator;
 
+import com.revrobotics.CANSparkMax;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.motor.ControllableMotor;
-import frc.robot.hardware.request.IRequest;
-import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
-import frc.robot.subsystems.elevator.factories.RealElevatorConstants;
+import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
 import frc.utils.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -13,8 +14,7 @@ public class Elevator extends GBSubsystem {
 
 	private final DigitalInputInputsAutoLogged digitalInputsInputs;
 	private final ElevatorCommandBuilder commandBuilder;
-	private final IRequest positionRequest;
-	private double targetPosition;
+	private final SparkMaxAngleRequest angleRequest;
 
 	private final ElevatorStuff elevatorStuff;
 	private final ControllableMotor mainMotor;
@@ -30,17 +30,26 @@ public class Elevator extends GBSubsystem {
 		this.elevatorStuff = elevatorStuff;
 		this.commandBuilder = new ElevatorCommandBuilder(this);
 
-		this.positionRequest = new SparkMaxDoubleRequest(targetPosition, SparkMaxDoubleRequest.SparkDoubleRequestType.CURRENT, 0);
-		elevatorStuff.mainMotor().applyDoubleRequest(positionRequest);
+		this.angleRequest = new SparkMaxAngleRequest(
+				ElevatorPresets.DEFAULT.getMotorAngle(),
+				SparkMaxAngleRequest.SparkAngleRequestType.POSITION,
+				ElevatorConstants.ELEVATOR_PID_SLOT,
+				Elevator::ElevatorFeedforward
+		);
 	}
 
+	public static double ElevatorFeedforward(CANSparkMax motor) {
+		return ElevatorConstants.FEEDFORwARD_CALCULATOR.calculate(
+				motor.getEncoder().getVelocity()
+		);
+	}
 
 	public ElevatorCommandBuilder getCommandBuilder() {
 		return commandBuilder;
 	}
 
-	public void setPower(double target) {
-		targetPosition = target;
+	public void setPower(double power) {
+		mainMotor.setPower(power);
 	}
 
 	public void stop() {
@@ -51,12 +60,9 @@ public class Elevator extends GBSubsystem {
 		elevatorStuff.mainMotor().setBrake(brake);
 	}
 
-	public void setTargetPosition(double position) {
-		targetPosition = position;
-	}
-
-	public double getTargetPosition() {
-		return targetPosition;
+	public void setTargetAngle(Rotation2d angle) {
+		angleRequest.withSetPoint(angle);
+		elevatorStuff.mainMotor().applyAngleRequest(angleRequest);
 	}
 
 	public boolean isPhysicallyStopped() {
@@ -72,7 +78,6 @@ public class Elevator extends GBSubsystem {
 	protected void subsystemPeriodic() {
 		updateInputs();
 		Logger.processInputs(elevatorStuff.digitalInputsLogPath(), digitalInputsInputs);
-		positionRequest.withSetPoint(targetPosition);
 	}
 
 }

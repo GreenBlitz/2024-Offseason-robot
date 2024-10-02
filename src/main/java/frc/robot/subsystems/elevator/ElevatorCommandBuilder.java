@@ -1,5 +1,6 @@
 package frc.robot.subsystems.elevator;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -35,12 +36,12 @@ public class ElevatorCommandBuilder {
         ).withName("Set power: " + power);
     }
 
-    public Command setPosition(double position) {
-        return new InstantCommand(() -> elevator.setTargetPosition(position));
+    public Command setPosition(Rotation2d angle) {
+        return new InstantCommand(() -> elevator.setTargetAngle(angle));
     }
 
     public Command setPosition(ElevatorPresets preset) {
-        return setPosition(preset.getPosition());
+        return setPosition(preset.getMotorAngle());
     }
     //@formatter:on
 
