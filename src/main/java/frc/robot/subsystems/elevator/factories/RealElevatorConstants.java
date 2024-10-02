@@ -25,7 +25,7 @@ public class RealElevatorConstants {
 
 	private final static CANSparkBase.SoftLimitDirection SOFT_LIMIT_DIRECTION = CANSparkBase.SoftLimitDirection.kReverse;
 
-	private final static float SOFT_LIMIT_VALUE = 0;
+	private final static float SOFT_LIMIT_VALUE = (float) 0.2;
 
 	private final static double DEBOUNCE_TIME_PHYSICAL_LIMIT = 0.03;
 
@@ -44,11 +44,11 @@ public class RealElevatorConstants {
 		IMotor secondaryMotor = new BrushlessSparkMAXMotor(logPath, secondarySparkMaxWrapper, new SysIdRoutine.Config());
 
 		Supplier<Double> mainMotorPosition = () -> mainSparkMaxWrapper.getEncoder().getPosition();
-		SparkMaxDoubleSignal mainMotorPositionSignal = new SparkMaxDoubleSignal("motor position", mainMotorPosition);
+		SparkMaxDoubleSignal mainMotorPositionSignal = new SparkMaxDoubleSignal("main motor position", mainMotorPosition);
 		mainSparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, SOFT_LIMIT_VALUE);
 
 		Supplier<Double> secondaryMotorPosition = () -> secondarySparkMaxWrapper.getEncoder().getPosition();
-		SparkMaxDoubleSignal secondaryMotorPositionSignal = new SparkMaxDoubleSignal("motor position", secondaryMotorPosition);
+		SparkMaxDoubleSignal secondaryMotorPositionSignal = new SparkMaxDoubleSignal("secondary motor position", secondaryMotorPosition);
 		mainSparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, SOFT_LIMIT_VALUE);
 
 		Supplier<Double> motorsVoltage = () -> (mainSparkMaxWrapper.getBusVoltage() * secondarySparkMaxWrapper.getAppliedOutput());

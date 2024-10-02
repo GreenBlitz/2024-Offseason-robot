@@ -40,7 +40,7 @@ public class ElevatorCommandBuilder {
         return new InstantCommand(() -> elevator.setTargetAngle(angle));
     }
 
-    public Command setPosition(ElevatorPresets preset) {
+    public Command setPosition(ElevatorStates preset) {
         return setPosition(preset.getMotorAngle());
     }
     //@formatter:on

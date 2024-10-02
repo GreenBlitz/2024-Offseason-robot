@@ -1,7 +1,6 @@
 package frc.robot.subsystems.elevator;
 
 import com.revrobotics.CANSparkMax;
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
@@ -31,7 +30,7 @@ public class Elevator extends GBSubsystem {
 		this.commandBuilder = new ElevatorCommandBuilder(this);
 
 		this.angleRequest = new SparkMaxAngleRequest(
-				ElevatorPresets.DEFAULT.getMotorAngle(),
+				ElevatorStates.DEFAULT.getMotorAngle(),
 				SparkMaxAngleRequest.SparkAngleRequestType.POSITION,
 				ElevatorConstants.ELEVATOR_PID_SLOT,
 				Elevator::ElevatorFeedforward
