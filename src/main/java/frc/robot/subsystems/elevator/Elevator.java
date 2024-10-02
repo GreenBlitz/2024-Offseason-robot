@@ -30,17 +30,15 @@ public class Elevator extends GBSubsystem {
 		this.commandBuilder = new ElevatorCommandBuilder(this);
 
 		this.angleRequest = new SparkMaxAngleRequest(
-				Rotation2d.fromRotations(0),
-				SparkMaxAngleRequest.SparkAngleRequestType.POSITION,
-				ElevatorConstants.ELEVATOR_PID_SLOT,
-				Elevator::ElevatorFeedforward
+			Rotation2d.fromRotations(0),
+			SparkMaxAngleRequest.SparkAngleRequestType.POSITION,
+			ElevatorConstants.ELEVATOR_PID_SLOT,
+			Elevator::ElevatorFeedforward
 		);
 	}
 
 	public static double ElevatorFeedforward(CANSparkMax motor) {
-		return ElevatorConstants.FEEDFORwARD_CALCULATOR.calculate(
-				motor.getEncoder().getVelocity()
-		);
+		return ElevatorConstants.FEEDFORwARD_CALCULATOR.calculate(motor.getEncoder().getVelocity());
 	}
 
 	public ElevatorCommandBuilder getCommandBuilder() {

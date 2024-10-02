@@ -13,13 +13,16 @@ public record ElevatorStuff(
 	InputSignal<Double> secondaryMotorPositionSignal,
 	IDigitalInput digitalInput
 ) {
+
 	public ElevatorStuff(
-			String logPath,
-			ControllableMotor mainMotor,
-			InputSignal<Double> voltageSignal,
-			InputSignal<Double> mainMotorPositionSignal,
-			InputSignal<Double> secondaryMotorPositionSignal,
-			IDigitalInput digitalInput) {
+		String logPath,
+		ControllableMotor mainMotor,
+		InputSignal<Double> voltageSignal,
+		InputSignal<Double> mainMotorPositionSignal,
+		InputSignal<Double> secondaryMotorPositionSignal,
+		IDigitalInput digitalInput
+	) {
 		this(logPath, logPath + "physicalBreak", mainMotor, voltageSignal, mainMotorPositionSignal, secondaryMotorPositionSignal, digitalInput);
 	}
+
 }
