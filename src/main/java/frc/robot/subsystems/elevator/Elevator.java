@@ -30,7 +30,7 @@ public class Elevator extends GBSubsystem {
 		this.commandBuilder = new ElevatorCommandBuilder(this);
 
 		this.angleRequest = new SparkMaxAngleRequest(
-				ElevatorStates.DEFAULT.getMotorAngle(),
+				Rotation2d.fromRotations(0),
 				SparkMaxAngleRequest.SparkAngleRequestType.POSITION,
 				ElevatorConstants.ELEVATOR_PID_SLOT,
 				Elevator::ElevatorFeedforward

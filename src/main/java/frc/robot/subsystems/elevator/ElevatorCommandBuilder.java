@@ -39,10 +39,6 @@ public class ElevatorCommandBuilder {
     public Command setPosition(Rotation2d angle) {
         return new InstantCommand(() -> elevator.setTargetAngle(angle));
     }
-
-    public Command setPosition(ElevatorStates preset) {
-        return setPosition(preset.getMotorAngle());
-    }
     //@formatter:on
 
 }

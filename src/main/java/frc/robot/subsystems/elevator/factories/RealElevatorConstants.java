@@ -25,13 +25,11 @@ public class RealElevatorConstants {
 
 	private final static CANSparkBase.SoftLimitDirection SOFT_LIMIT_DIRECTION = CANSparkBase.SoftLimitDirection.kReverse;
 
+	// TODO: check this later
 	private final static float SOFT_LIMIT_VALUE = (float) 0.2;
 
-	private final static double DEBOUNCE_TIME_PHYSICAL_LIMIT = 0.03;
-
-	private final static double GEAR_RATIO = .3; // TODO: check this later
-
-	public final static double MAXIMUM_MOTORS_DELTA = 0.01;
+	// TODO: check this later
+	private final static double GEAR_RATIO = 0.3;
 
 	private final static SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
 
@@ -46,13 +44,15 @@ public class RealElevatorConstants {
 		Supplier<Double> mainMotorPosition = () -> mainSparkMaxWrapper.getEncoder().getPosition();
 		SparkMaxDoubleSignal mainMotorPositionSignal = new SparkMaxDoubleSignal("main motor position", mainMotorPosition);
 		mainSparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, SOFT_LIMIT_VALUE);
+		mainSparkMaxWrapper.getEncoder().setPositionConversionFactor(GEAR_RATIO);
 
 		Supplier<Double> secondaryMotorPosition = () -> secondarySparkMaxWrapper.getEncoder().getPosition();
 		SparkMaxDoubleSignal secondaryMotorPositionSignal = new SparkMaxDoubleSignal("secondary motor position", secondaryMotorPosition);
-		mainSparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, SOFT_LIMIT_VALUE);
+		secondarySparkMaxWrapper.setSoftLimit(SOFT_LIMIT_DIRECTION, SOFT_LIMIT_VALUE);
+		secondarySparkMaxWrapper.getEncoder().setPositionConversionFactor(GEAR_RATIO);
 
-		Supplier<Double> motorsVoltage = () -> (mainSparkMaxWrapper.getBusVoltage() * secondarySparkMaxWrapper.getAppliedOutput());
-		SparkMaxDoubleSignal motorsVoltageSignal = new SparkMaxDoubleSignal("motor position", motorsVoltage);
+		Supplier<Double> motorsVoltage = () -> (mainSparkMaxWrapper.getBusVoltage() * mainSparkMaxWrapper.getAppliedOutput());
+		SparkMaxDoubleSignal motorsVoltageSignal = new SparkMaxDoubleSignal("main motor voltage", motorsVoltage);
 
 		secondarySparkMaxWrapper.follow(mainSparkMaxWrapper);
 
