@@ -34,10 +34,6 @@ public class Chooser extends GBSubsystem {
 		return digitalInputInputs.debouncedValue;
 	}
 
-	public void setBrake(boolean brake) {
-		motor.setBrake(brake);
-	}
-
 	public void stop() {
 		motor.stop();
 	}

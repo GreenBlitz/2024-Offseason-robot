@@ -27,6 +27,10 @@ public class Robot {
 		configureBindings();
 	}
 
+	public Chooser getChooser() {
+		return chooser;
+	}
+
 	private void configureBindings() {
 		JoysticksBindings.configureBindings(this);
 	}
