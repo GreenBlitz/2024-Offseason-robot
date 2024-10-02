@@ -27,10 +27,6 @@ public class Robot {
 		configureBindings();
 	}
 
-	public Chooser getChooser() {
-		return chooser;
-	}
-
 	private void configureBindings() {
 		JoysticksBindings.configureBindings(this);
 	}
@@ -38,6 +34,10 @@ public class Robot {
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
+	}
+
+	public Chooser getChooser() {
+		return chooser;
 	}
 
 }
