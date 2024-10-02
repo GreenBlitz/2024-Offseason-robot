@@ -13,7 +13,7 @@ public record ChooserStuff(
 ) {
 
 	public ChooserStuff(String logPath, IMotor motor, InputSignal<Double> voltageSignal, IDigitalInput digitalInput) {
-		this(logPath, logPath + "digitalInput", motor, voltageSignal, digitalInput);
+		this(logPath, logPath + "digitalInput/", motor, voltageSignal, digitalInput);
 	}
 
 }
