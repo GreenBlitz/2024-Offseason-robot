@@ -34,10 +34,10 @@ public class ChooserCommandsBuilder {
 				chooser
 		).withName("Set power by supplier");
     }
-	//@formatter:on
 
 	public Command stop() {
 		return new RunCommand(chooser::stop, chooser).withName("Stop");
 	}
+	//@formatter:on
 
 }
