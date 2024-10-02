@@ -8,7 +8,7 @@ public class ChooserFactory {
 	public static ChooserStuff create(String logPath) {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> RealChooserConstants.generateChooserStuff(logPath);
-			case SIMULATION -> RealChooserConstants.generateChooserStuff(logPath);
+			case SIMULATION -> null;
 		};
 	}
 
