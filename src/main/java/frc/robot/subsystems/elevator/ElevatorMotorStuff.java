@@ -8,6 +8,7 @@ import frc.robot.hardware.signal.InputSignal;
 public record ElevatorMotorStuff(
 	ControllableMotor motor,
 	InputSignal<Double> voltageSignal,
-	InputSignal<Rotation2d> positionSignal
+	InputSignal<Rotation2d> positionSignal,
+	InputSignal... signals
 ) {}
 //@formatter:on

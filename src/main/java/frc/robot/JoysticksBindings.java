@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
@@ -44,11 +45,11 @@ public class JoysticksBindings {
 		// bindings...
 		
 //		robot.getFlywheel().getSysIdCalibrator().setAllButtonsForCalibration(usedJoystick);
-		
-		usedJoystick.B.whileTrue(robot.getFlywheel().getCommandsBuilder().setVelocity(Rotation2d.fromRotations(50)));
-		usedJoystick.X.whileTrue(robot.getFlywheel().getCommandsBuilder().setVelocity(Rotation2d.fromRotations(20)));
-		usedJoystick.A.whileTrue(robot.getFlywheel().getCommandsBuilder().setVelocity(Rotation2d.fromRotations(10)));
-		usedJoystick.Y.whileTrue(robot.getFlywheel().getCommandsBuilder().stop());
+	
+		usedJoystick.A.whileTrue(robot.getElevator().getCommandsBuilder().setTargetPositionMeters(0.05));
+		usedJoystick.B.whileTrue(robot.getElevator().getCommandsBuilder().setTargetPositionMeters(0.2));
+		usedJoystick.X.whileTrue(robot.getElevator().getCommandsBuilder().stop());
+
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

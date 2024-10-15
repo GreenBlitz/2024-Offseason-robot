@@ -5,7 +5,11 @@ import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
+import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
+import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
 import frc.robot.subsystems.GBSubsystem;
+import frc.utils.Conversions;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends GBSubsystem {
@@ -19,6 +23,8 @@ public class Elevator extends GBSubsystem {
 	private final ControllableMotor frontMotor;
 	private final ControllableMotor backMotor;
 	private final IDigitalInput limitSwitch;
+	
+	private SysIdCalibrator sysIdCalibrator;
 
 	public Elevator(ElevatorStuff elevatorStuff) {
 		super(elevatorStuff.logPath());
@@ -30,12 +36,15 @@ public class Elevator extends GBSubsystem {
 		this.elevatorStuff = elevatorStuff;
 		this.positionRequest = elevatorStuff.positionRequest();
 		this.voltageRequest = elevatorStuff.voltageRequest();
+		this.sysIdCalibrator = new SysIdCalibrator(backMotor.getSysidConfigInfo(),this, this::setVoltage);
 
 		frontMotor.resetPosition(metersToMotorRotations(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS));
 		backMotor.resetPosition(metersToMotorRotations(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS));
 
 		this.commandsBuilder = new ElevatorCommandsBuilder(this);
-
+		
+		frontMotor.resetPosition(new Rotation2d());
+		backMotor.resetPosition(new Rotation2d());
 		updateInputs();
 	}
 
@@ -79,9 +88,13 @@ public class Elevator extends GBSubsystem {
 				+ elevatorStuff.backMotorStuff().positionSignal().getLatestValue().getRotations()) / 2
 		);
 	}
+	
+	public SysIdCalibrator getSysIdCalibrator(){
+		return this.sysIdCalibrator;
+	}
 
 	public double getPositionMeters() {
-		return motorRotationsToMeters(getElevatorAngle());
+		return motorRotationsToMeters(elevatorStuff.frontMotorStuff().positionSignal().getLatestValue());
 	}
 
 	protected void stayInPlace() {
@@ -91,28 +104,36 @@ public class Elevator extends GBSubsystem {
 	protected void updateInputs() {
 		limitSwitch.updateInputs(digitalInputsInputs);
 		frontMotor.updateSignals(elevatorStuff.frontMotorStuff().positionSignal(), elevatorStuff.frontMotorStuff().voltageSignal());
-		backMotor.updateSignals(elevatorStuff.backMotorStuff().positionSignal(), elevatorStuff.backMotorStuff().voltageSignal());
+		frontMotor.updateSignals(elevatorStuff.frontMotorStuff().signals());
+		backMotor.updateSignals(elevatorStuff.backMotorStuff().signals());
 
 		Logger.processInputs(elevatorStuff.digitalInputsLogPath(), digitalInputsInputs);
 		Logger.recordOutput(getLogPath() + "isAtBackwardLimit", isAtBackwardLimit());
 		Logger.recordOutput(getLogPath() + "elevatorPosition", getPositionMeters());
+		
+		Logger.recordOutput("elevator position meters", Elevator.motorRotationsToMeters(elevatorStuff.frontMotorStuff().positionSignal().getLatestValue()));
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
-		if (ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS > getPositionMeters()) {
-			frontMotor.resetPosition(metersToMotorRotations(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS));
-			backMotor.resetPosition(metersToMotorRotations(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS));
-		}
+//		if (ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS > getPositionMeters()) {
+//			frontMotor.resetPosition(metersToMotorRotations(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS));
+//			backMotor.resetPosition(metersToMotorRotations(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS));
+//		}
+		
+		Logger.recordOutput("target a ",((SparkMaxAngleRequest) positionRequest).getSetPoint().getRotations());
+		Logger.recordOutput("current a ",(elevatorStuff.frontMotorStuff().positionSignal().getLatestValue().getRotations()));
+		
 		updateInputs();
 	}
 	
 	public static double motorRotationsToMeters(Rotation2d rotations) {
-		return rotations.getRotations() * ElevatorConstants.MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO;
+		return Conversions.angleToDistance(rotations,ElevatorConstants.MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO);
 	}
 	
 	public static Rotation2d metersToMotorRotations(double meters) {
-		return Rotation2d.fromRotations(meters / ElevatorConstants.MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO);
+		Logger.recordOutput(String.valueOf(meters),  Conversions.distanceToAngle(meters ,ElevatorConstants.MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO).getRotations());
+		return Conversions.distanceToAngle(meters ,ElevatorConstants.MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO);
 	}
 
 }

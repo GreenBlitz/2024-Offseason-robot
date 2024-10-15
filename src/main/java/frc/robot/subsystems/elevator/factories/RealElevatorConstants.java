@@ -21,10 +21,14 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorMotorStuff;
 import frc.robot.subsystems.elevator.ElevatorStuff;
 import frc.utils.AngleUnit;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
 
 public class RealElevatorConstants {
 
@@ -36,7 +40,7 @@ public class RealElevatorConstants {
 
 	private static final SparkLimitSwitch.Type REVERSE_LIMIT_SWITCH_TYPE = SparkLimitSwitch.Type.kNormallyOpen;
 
-	private static final ElevatorFeedforward FEEDFORWARD_CALCULATOR = new ElevatorFeedforward(0, 0, 0, 0);
+	private static final ElevatorFeedforward FEEDFORWARD_CALCULATOR = new ElevatorFeedforward(0.59175, 0.15452, 0.24436, 0);
 
 	private static final CANSparkBase.IdleMode IDLE_MODE = CANSparkBase.IdleMode.kBrake;
 
@@ -45,7 +49,16 @@ public class RealElevatorConstants {
 	private static final Function<
 		Rotation2d,
 		Double> FEEDFORWARD_FUNCTION = velocity -> RealElevatorConstants.FEEDFORWARD_CALCULATOR.calculate(velocity.getRadians());
-
+	
+	private static SysIdRoutine.Config generateSysidConfig() {
+		return new SysIdRoutine.Config(
+				Volts.of(0.5).per(Seconds.of(1)),
+				Volts.of(3),
+				Seconds.of(100),
+				(state) -> Logger.recordOutput("state", state.toString())
+		);
+	}
+	
 	private static void configureMotor(SparkMaxWrapper sparkMaxWrapper, boolean inverted) {
 		sparkMaxWrapper
 			.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) Elevator.metersToMotorRotations(ElevatorConstants.REVERSE_SOFT_LIMIT_VALUE_METERS).getRotations());
@@ -59,31 +72,34 @@ public class RealElevatorConstants {
 		sparkMaxWrapper.setSmartCurrentLimit(CURRENT_LIMIT);
 		sparkMaxWrapper.getEncoder().setPositionConversionFactor(ElevatorConstants.GEAR_RATIO);
 		sparkMaxWrapper.getEncoder().setVelocityConversionFactor(ElevatorConstants.GEAR_RATIO);
-		sparkMaxWrapper.getPIDController().setP(1);
+		sparkMaxWrapper.getPIDController().setP(6);
 		sparkMaxWrapper.getPIDController().setI(0);
-		sparkMaxWrapper.getPIDController().setD(0);
+		sparkMaxWrapper.getPIDController().setD(1);
 	}
 
 	public static ElevatorMotorStuff generateMotorStuff(String logPath, SparkMaxWrapper sparkMaxWrapper, boolean inverted) {
 		configureMotor(sparkMaxWrapper, inverted);
 
-		ControllableMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, new SysIdRoutine.Config());
+		ControllableMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, generateSysidConfig());
 
 		Supplier<Double> motorPosition = sparkMaxWrapper.getEncoder()::getPosition;
-		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("position", motorPosition, AngleUnit.ROTATIONS);
-
+		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("position", motorPosition, AngleUnit.RADIANS);
+		
+		SuppliedDoubleSignal velocitySignalForSysID = new SuppliedDoubleSignal("velocity - sysid", () -> Elevator.motorRotationsToMeters(Rotation2d.fromRotations(sparkMaxWrapper.getEncoder().getVelocity() / 60)));
+		SuppliedDoubleSignal positionSignalForSysID = new SuppliedDoubleSignal("position - sysid", () -> Elevator.motorRotationsToMeters(Rotation2d.fromRadians(sparkMaxWrapper.getEncoder().getPosition()/2)));
+		
 		Supplier<Double> motorVoltage = sparkMaxWrapper::getVoltage;
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", motorVoltage);
 
-		return new ElevatorMotorStuff(motor, voltageSignal, positionSignal);
+		return new ElevatorMotorStuff(motor, voltageSignal, positionSignal, velocitySignalForSysID, positionSignalForSysID);
 	}
 
 	public static ElevatorStuff generateElevatorStuff(String logPath) {
 		SparkMaxWrapper frontMotorWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_FRONT);
 		SparkMaxWrapper backMotorWrapper = new SparkMaxWrapper(IDs.CANSparkMAXIDs.ELEVATOR_BACK);
 
-		ElevatorMotorStuff frontMotorStuff = generateMotorStuff(logPath + "frontMotor/", frontMotorWrapper, false);
-		ElevatorMotorStuff backMotorStuff = generateMotorStuff(logPath + "backMotor/", backMotorWrapper, false);
+		ElevatorMotorStuff frontMotorStuff = generateMotorStuff(logPath + "frontMotor/", frontMotorWrapper, true);
+		ElevatorMotorStuff backMotorStuff = generateMotorStuff(logPath + "backMotor/", backMotorWrapper, true);
 
 		BooleanSupplier atLimitSwitch = () -> frontMotorWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).isPressed();
 		frontMotorWrapper.getReverseLimitSwitch(REVERSE_LIMIT_SWITCH_TYPE).enableLimitSwitch(true);

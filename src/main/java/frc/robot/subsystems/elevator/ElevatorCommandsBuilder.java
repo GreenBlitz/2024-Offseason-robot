@@ -38,7 +38,7 @@ public class ElevatorCommandsBuilder {
 		return new FunctionalCommand(
 			() -> {},
 			() -> elevator.setTargetPositionMeters(position),
-			interrupted -> elevator.stayInPlace(),
+			interrupted -> {},
 			() -> false,
 			elevator
 		);
