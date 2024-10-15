@@ -17,8 +17,8 @@ import frc.utils.AngleUnit;
 import java.util.function.Function;
 
 public class RealPivotConstants {
-
-	private static final double GEAR_RATIO = 1;
+	
+	private static final double GEAR_RATIO = 1 / ((7.0 / 1) * (5.0 / 1) * (60.0 / 16));
 
 	public static final int POSITION_PID_SLOT = 0;
 
