@@ -44,12 +44,10 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
 		
-//		robot.getFlywheel().getSysIdCalibrator().setAllButtonsForCalibration(usedJoystick);
-	
-		usedJoystick.A.whileTrue(robot.getElevator().getCommandsBuilder().setTargetPositionMeters(0.05));
-		usedJoystick.B.whileTrue(robot.getElevator().getCommandsBuilder().setTargetPositionMeters(0.2));
-		usedJoystick.X.whileTrue(robot.getElevator().getCommandsBuilder().stop());
-
+		usedJoystick.A.whileTrue(robot.getPivot().getCommandsBuilder().goToPosition(Rotation2d.fromDegrees(15)));
+		usedJoystick.B.whileTrue(robot.getPivot().getCommandsBuilder().goToPosition(Rotation2d.fromDegrees(45)));
+		usedJoystick.Y.whileTrue(robot.getPivot().getCommandsBuilder().goToPosition(Rotation2d.fromDegrees(100)));
+		usedJoystick.X.whileTrue(robot.getPivot().getCommandsBuilder().stop());
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {
