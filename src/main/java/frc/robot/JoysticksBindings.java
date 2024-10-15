@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
@@ -25,24 +26,29 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-
-		robot.getSwerve()
-			.setDefaultCommand(
-				robot.getSwerve()
-					.getCommandsBuilder()
-					.driveBySavedState(
-						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
-						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
-						() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
-					)
-			);
+//
+//		robot.getSwerve()
+//			.setDefaultCommand(
+//				robot.getSwerve()
+//					.getCommandsBuilder()
+//					.driveBySavedState(
+//						() -> usedJoystick.getAxisValue(Axis.LEFT_Y),
+//						() -> usedJoystick.getAxisValue(Axis.LEFT_X),
+//						() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
+//					)
+//			);
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
 		
+//		robot.getFlywheel().getSysIdCalibrator().setAllButtonsForCalibration(usedJoystick);
 		
+		usedJoystick.B.whileTrue(robot.getFlywheel().getCommandsBuilder().setVelocity(Rotation2d.fromRotations(50)));
+		usedJoystick.X.whileTrue(robot.getFlywheel().getCommandsBuilder().setVelocity(Rotation2d.fromRotations(20)));
+		usedJoystick.A.whileTrue(robot.getFlywheel().getCommandsBuilder().setVelocity(Rotation2d.fromRotations(10)));
+		usedJoystick.Y.whileTrue(robot.getFlywheel().getCommandsBuilder().stop());
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {
