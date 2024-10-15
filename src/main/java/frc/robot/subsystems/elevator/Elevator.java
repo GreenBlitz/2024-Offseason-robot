@@ -88,14 +88,6 @@ public class Elevator extends GBSubsystem {
 		setTargetPositionMeters(getPositionMeters());
 	}
 
-	private double motorRotationsToMeters(Rotation2d rotations) {
-		return rotations.getRotations() * ElevatorConstants.MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO;
-	}
-
-	private Rotation2d metersToMotorRotations(double meters) {
-		return Rotation2d.fromRotations(meters / ElevatorConstants.MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO);
-	}
-
 	protected void updateInputs() {
 		limitSwitch.updateInputs(digitalInputsInputs);
 		frontMotor.updateSignals(elevatorStuff.frontMotorStuff().positionSignal(), elevatorStuff.frontMotorStuff().voltageSignal());
@@ -113,6 +105,14 @@ public class Elevator extends GBSubsystem {
 			backMotor.resetPosition(metersToMotorRotations(ElevatorConstants.MINIMUM_ACHIEVABLE_POSITION_METERS));
 		}
 		updateInputs();
+	}
+	
+	public static double motorRotationsToMeters(Rotation2d rotations) {
+		return rotations.getRotations() * ElevatorConstants.MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO;
+	}
+	
+	public static Rotation2d metersToMotorRotations(double meters) {
+		return Rotation2d.fromRotations(meters / ElevatorConstants.MOTOR_ROTATIONS_TO_METERS_CONVERSION_RATIO);
 	}
 
 }

@@ -16,6 +16,7 @@ import frc.robot.hardware.request.cansparkmax.SparkMaxAngleRequest;
 import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
+import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorMotorStuff;
 import frc.robot.subsystems.elevator.ElevatorStuff;
@@ -47,10 +48,10 @@ public class RealElevatorConstants {
 
 	private static void configureMotor(SparkMaxWrapper sparkMaxWrapper, boolean inverted) {
 		sparkMaxWrapper
-			.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) ElevatorConstants.REVERSE_SOFT_LIMIT_VALUE.getRotations());
+			.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float) Elevator.metersToMotorRotations(ElevatorConstants.REVERSE_SOFT_LIMIT_VALUE_METERS).getRotations());
 		sparkMaxWrapper.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true);
 		sparkMaxWrapper
-			.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) ElevatorConstants.FORWARD_SOFT_LIMIT_VALUE.getRotations());
+			.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float) Elevator.metersToMotorRotations(ElevatorConstants.FORWARD_SOFT_LIMIT_VALUE_METERS).getRotations());
 		sparkMaxWrapper.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
 
 		sparkMaxWrapper.setIdleMode(IDLE_MODE);
