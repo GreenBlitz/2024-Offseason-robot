@@ -9,7 +9,14 @@ import frc.robot.constants.Field;
 public class ShootingHelpers {
 
 	public static Translation2d getClosestShootingPoint(Pose2d robotPose) {
-		return getClosestShootingPoint(robotPose.getTranslation(), ShootingHelpersConstants.SHOOTING_DISTANCE_FROM_SPEAKER);
+		return getClosestShootingPoint(
+			robotPose.getTranslation(),
+			ShootingHelpersConstants.SHOOTING_DISTANCE_FROM_SPEAKER,
+			new Pair<>(
+				ShootingHelpersConstants.SPEAKER_LOWER_BOUND_WITHIN_SHOOTING_RANGE,
+				ShootingHelpersConstants.SPEAKER_UPPER_BOUND_WITHIN_SHOOTING_RANGE
+			)
+		);
 	}
 
 	@SafeVarargs
@@ -30,7 +37,7 @@ public class ShootingHelpers {
 			double maximumRangeRadians = invalidRange.getSecond().getRadians();
 
 			if (angleFromSpeakerRadians >= minimumRangeRadians && angleFromSpeakerRadians <= maximumRangeRadians) {
-				Rotation2d closestValidAngle = getClosestAngleWithinRange(invalidRange.getFirst(), invalidRange.getSecond(), angleFromSpeaker);
+				Rotation2d closestValidAngle = getClosestAngleIntervalBound(invalidRange.getFirst(), invalidRange.getSecond(), angleFromSpeaker);
 
 				return angleToPoint(closestValidAngle, DistanceForShootingFromSpeaker).plus(speaker);
 			}
@@ -56,7 +63,7 @@ public class ShootingHelpers {
 		return new Translation2d(closestValidPointX, slope * closestValidPointX);
 	}
 
-	public static Rotation2d getClosestAngleWithinRange(Rotation2d minimumRange, Rotation2d maximumRange, Rotation2d angleWithinRange) {
+	public static Rotation2d getClosestAngleIntervalBound(Rotation2d minimumRange, Rotation2d maximumRange, Rotation2d angleWithinRange) {
 		if (Math.abs(angleWithinRange.getRadians() - minimumRange.getRadians()) <= (angleWithinRange.getRadians() - maximumRange.getRadians())) {
 			return minimumRange;
 		} else {
