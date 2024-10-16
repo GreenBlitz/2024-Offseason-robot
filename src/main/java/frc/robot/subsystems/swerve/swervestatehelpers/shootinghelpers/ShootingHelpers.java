@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.swervestatehelpers.ShootingHelpers;
+package frc.robot.subsystems.swerve.swervestatehelpers.shootinghelpers;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -47,23 +47,23 @@ public class ShootingHelpers {
 		return closestValidPointRelativeToSpeaker.plus(speaker);
 	}
 
-	public static Translation2d angleToPoint(Rotation2d angle, double radius) {
+	private static Translation2d angleToPoint(Rotation2d angle, double radius) {
 		return new Translation2d(Math.cos(angle.getRadians()), Math.sin(angle.getRadians())).times(radius);
 	}
 
-	public static Rotation2d findAngleFromSpeaker(Translation2d robotPosition) {
+	private static Rotation2d findAngleFromSpeaker(Translation2d robotPosition) {
 		Translation2d speaker = Field.getSpeaker().toTranslation2d();
 		Translation2d robotPoseRelativeToSpeaker = robotPosition.minus(speaker);
 		return Rotation2d.fromRadians(Math.atan2(robotPoseRelativeToSpeaker.getY(), robotPoseRelativeToSpeaker.getX()));
 	}
 
-	public static Translation2d getCutPointOnRadiusFromCoordinates(Translation2d point, double radius) {
+	private static Translation2d getCutPointOnRadiusFromCoordinates(Translation2d point, double radius) {
 		double slope = point.getY() / point.getX();
 		double closestValidPointX = radius / Math.sqrt(Math.pow(slope, 2) + 1);
 		return new Translation2d(closestValidPointX, slope * closestValidPointX);
 	}
 
-	public static Rotation2d getClosestAngleIntervalBound(Rotation2d minimumRange, Rotation2d maximumRange, Rotation2d angleWithinRange) {
+	private static Rotation2d getClosestAngleIntervalBound(Rotation2d minimumRange, Rotation2d maximumRange, Rotation2d angleWithinRange) {
 		if (Math.abs(angleWithinRange.getRadians() - minimumRange.getRadians()) <= (angleWithinRange.getRadians() - maximumRange.getRadians())) {
 			return minimumRange;
 		} else {

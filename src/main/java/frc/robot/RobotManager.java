@@ -4,10 +4,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.constants.Field;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.simulation.SimulationManager;
+import frc.robot.subsystems.swerve.swervestatehelpers.shootinghelpers.ShootingHelpers;
 import frc.utils.auto.PathPlannerUtils;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtils;
@@ -65,6 +69,8 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
+		System.out.println(Field.getSpeaker());
+		System.out.println(ShootingHelpers.getClosestShootingPoint(new Pose2d(0, 0, Rotation2d.fromRotations(0))));
 	}
 
 	@Override
