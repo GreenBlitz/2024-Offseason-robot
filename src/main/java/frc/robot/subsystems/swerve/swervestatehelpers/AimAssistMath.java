@@ -72,10 +72,9 @@ public class AimAssistMath {
 	public static Translation2d getClosestShootingPoint(Translation2d robotPose, Pair<Rotation2d, Rotation2d>[] invalidRanges, double DistanceForShootingFromSpeaker) {
 		Translation2d speaker = Field.getSpeaker().toTranslation2d();
 		Translation2d robotPoseRelativeToSpeaker = robotPose.minus(speaker);
-		double slope = robotPoseRelativeToSpeaker.getY() / robotPoseRelativeToSpeaker.getX();
-		double closestValidPointX = DistanceForShootingFromSpeaker / Math.sqrt(Math.pow(slope, 2) + 1);
-		Translation2d closestValidPointRelativeToSpeaker = new Translation2d(closestValidPointX, slope * closestValidPointX);
 		Rotation2d angleFromSpeaker = Rotation2d.fromRadians(Math.atan2(robotPoseRelativeToSpeaker.getY(), robotPoseRelativeToSpeaker.getX()));
+
+		Translation2d closestValidPointRelativeToSpeaker;
 
 		for (Pair<Rotation2d, Rotation2d> invalidRange: invalidRanges) {
 			double angleFromSpeakerRadians = angleFromSpeaker.getRadians();
@@ -95,6 +94,10 @@ public class AimAssistMath {
 				return closestValidPointRelativeToSpeaker.plus(speaker);
 			}
 		}
+
+		double slope = robotPoseRelativeToSpeaker.getY() / robotPoseRelativeToSpeaker.getX();
+		double closestValidPointX = DistanceForShootingFromSpeaker / Math.sqrt(Math.pow(slope, 2) + 1);
+		closestValidPointRelativeToSpeaker = new Translation2d(closestValidPointX, slope * closestValidPointX);
 
 		return closestValidPointRelativeToSpeaker.plus(speaker);
 	}
