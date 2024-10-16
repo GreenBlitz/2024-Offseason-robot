@@ -69,37 +69,4 @@ public class AimAssistMath {
 			/ (magnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
 	}
 
-	public static Translation2d getClosestShootingPoint(Translation2d robotPose, Pair<Rotation2d, Rotation2d>[] invalidRanges, double DistanceForShootingFromSpeaker) {
-		Translation2d speaker = Field.getSpeaker().toTranslation2d();
-		Translation2d robotPoseRelativeToSpeaker = robotPose.minus(speaker);
-		Rotation2d angleFromSpeaker = Rotation2d.fromRadians(Math.atan2(robotPoseRelativeToSpeaker.getY(), robotPoseRelativeToSpeaker.getX()));
-
-		Translation2d closestValidPointRelativeToSpeaker;
-
-		for (Pair<Rotation2d, Rotation2d> invalidRange: invalidRanges) {
-			double angleFromSpeakerRadians = angleFromSpeaker.getRadians();
-			double minimumRangeRadians = invalidRange.getFirst().getRadians();
-			double maximumRangeRadians = invalidRange.getSecond().getRadians();
-
-			if (angleFromSpeakerRadians >= minimumRangeRadians
-			&& angleFromSpeakerRadians <= maximumRangeRadians) {
-				Rotation2d closestValidAngle;
-				if (Math.abs(angleFromSpeakerRadians - minimumRangeRadians) <= (angleFromSpeakerRadians - maximumRangeRadians)) {
-					closestValidAngle = invalidRange.getFirst();
-				} else {
-					closestValidAngle = invalidRange.getSecond();
-				}
-
-				closestValidPointRelativeToSpeaker = new Translation2d(Math.cos(closestValidAngle.getRadians()), Math.sin(closestValidAngle.getRadians())).times(DistanceForShootingFromSpeaker);
-				return closestValidPointRelativeToSpeaker.plus(speaker);
-			}
-		}
-
-		double slope = robotPoseRelativeToSpeaker.getY() / robotPoseRelativeToSpeaker.getX();
-		double closestValidPointX = DistanceForShootingFromSpeaker / Math.sqrt(Math.pow(slope, 2) + 1);
-		closestValidPointRelativeToSpeaker = new Translation2d(closestValidPointX, slope * closestValidPointX);
-
-		return closestValidPointRelativeToSpeaker.plus(speaker);
-	}
-
 }
