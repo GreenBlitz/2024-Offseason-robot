@@ -84,12 +84,12 @@ public class Pivot extends GBSubsystem {
 	
 	@Override
 	protected void subsystemPeriodic() {
-//		if (
-//			PivotConstants.MAXIMUM_ACHIEVABLE_ANGLE.getRotations()
-//				< resetAngleFilter.calculate(pivotStuff.positionSignal().getLatestValue().getRotations())
-//		) {
-//			motor.resetPosition(PivotConstants.MAXIMUM_ACHIEVABLE_ANGLE);
-//		}
+		if (
+			PivotConstants.MAXIMUM_ACHIEVABLE_ANGLE.getRotations()
+				< resetAngleFilter.calculate(pivotStuff.positionSignal().getLatestValue().getRotations())
+		) {
+			motor.resetPosition(PivotConstants.MAXIMUM_ACHIEVABLE_ANGLE);
+		}
 		
 		Logger.recordOutput("pivot pos", pivotStuff.positionSignal().getLatestValue().getDegrees());
 		updateInputs();
