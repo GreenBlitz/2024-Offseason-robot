@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.swervestatehelpers.shootinghelpers;
+package frc.utils.shootinghelpers;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
