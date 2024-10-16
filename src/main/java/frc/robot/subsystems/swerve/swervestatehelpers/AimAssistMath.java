@@ -1,9 +1,11 @@
 package frc.robot.subsystems.swerve.swervestatehelpers;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.robot.constants.Field;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.SwerveState;
@@ -65,6 +67,36 @@ public class AimAssistMath {
 		return velocityPerSecond.getRadians()
 			* SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR
 			/ (magnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
+	}
+
+	public static Translation2d getClosestShootingPoint(Translation2d robotPose, Pair<Rotation2d, Rotation2d>[] invalidRanges, double DistanceForShootingFromSpeaker) {
+		Translation2d speakerPose = Field.getSpeaker().toTranslation2d();
+		Translation2d robotPoseRelativeToSpeaker = robotPose.minus(speakerPose);
+		double slope = robotPoseRelativeToSpeaker.getY() / robotPoseRelativeToSpeaker.getX();
+		double closestValidPointX = DistanceForShootingFromSpeaker / Math.sqrt(Math.pow(slope, 2) + 1);
+		Translation2d closestValidPoint = new Translation2d(closestValidPointX, slope * closestValidPointX);
+		Rotation2d angleFromSpeaker = Rotation2d.fromRadians(Math.atan2(robotPoseRelativeToSpeaker.getY(), robotPoseRelativeToSpeaker.getX()));
+
+		for (Pair<Rotation2d, Rotation2d> invalidRange: invalidRanges) {
+			double angleFromSpeakerRadians = angleFromSpeaker.getRadians();
+			double minimumRangeRadians = invalidRange.getFirst().getRadians();
+			double maximumRangeRadians = invalidRange.getSecond().getRadians();
+
+			if (angleFromSpeakerRadians >= minimumRangeRadians
+			&& angleFromSpeakerRadians <= maximumRangeRadians) {
+				Rotation2d closestValidAngle;
+				if (Math.abs(angleFromSpeakerRadians - minimumRangeRadians) <= (angleFromSpeakerRadians - maximumRangeRadians)) {
+					closestValidAngle = invalidRange.getFirst();
+				} else {
+					closestValidAngle = invalidRange.getSecond();
+				}
+
+				closestValidPoint = new Translation2d(Math.cos(closestValidAngle.getRadians()), Math.sin(closestValidAngle.getRadians())).times(DistanceForShootingFromSpeaker);
+				return closestValidPoint;
+			}
+		}
+
+		return closestValidPoint;
 	}
 
 }
