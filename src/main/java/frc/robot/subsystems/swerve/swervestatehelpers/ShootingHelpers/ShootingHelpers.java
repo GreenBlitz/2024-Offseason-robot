@@ -13,7 +13,11 @@ public class ShootingHelpers {
 	}
 
 	@SafeVarargs
-	public static Translation2d getClosestShootingPoint(Translation2d robotPosition, double DistanceForShootingFromSpeaker, Pair<Rotation2d, Rotation2d>... invalidRanges) {
+	public static Translation2d getClosestShootingPoint(
+		Translation2d robotPosition,
+		double DistanceForShootingFromSpeaker,
+		Pair<Rotation2d, Rotation2d>... invalidRanges
+	) {
 		Translation2d speaker = Field.getSpeaker().toTranslation2d();
 		Translation2d robotRelativeToSpeaker = robotPosition.minus(speaker);
 		Rotation2d angleFromSpeaker = findAngleFromSpeaker(robotPosition);
@@ -21,12 +25,11 @@ public class ShootingHelpers {
 
 		Translation2d closestValidPointRelativeToSpeaker;
 
-		for (Pair<Rotation2d, Rotation2d> invalidRange: invalidRanges) {
+		for (Pair<Rotation2d, Rotation2d> invalidRange : invalidRanges) {
 			double minimumRangeRadians = invalidRange.getFirst().getRadians();
 			double maximumRangeRadians = invalidRange.getSecond().getRadians();
 
-			if (angleFromSpeakerRadians >= minimumRangeRadians
-				&& angleFromSpeakerRadians <= maximumRangeRadians) {
+			if (angleFromSpeakerRadians >= minimumRangeRadians && angleFromSpeakerRadians <= maximumRangeRadians) {
 				Rotation2d closestValidAngle = getClosestAngleWithinRange(invalidRange.getFirst(), invalidRange.getSecond(), angleFromSpeaker);
 
 				return angleToPoint(closestValidAngle, DistanceForShootingFromSpeaker).plus(speaker);
