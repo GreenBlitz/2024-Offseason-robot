@@ -20,6 +20,14 @@ public class ShootingHelpers {
 		);
 	}
 
+	/**
+	 * a fancy function with cool math that calculates the best position for shooting
+	 * @param robotPosition: the translation of the robot in the field
+	 * @param DistanceForShootingFromSpeaker: the exact distance that the robot can shoot from, to the speaker
+	 * @param speakerPosition: the position of the speaker in the field
+	 * @param invalidRanges: invalid ranges for shooting (e.g. stage) represented as Pair<starting, ending> angle (in the relative speaker space). <b>Ranges CAN'T overlap.</b>
+	 * @return the best position for shooting base on the given data
+ 	 */
 	@SafeVarargs
 	public static Translation2d getClosestShootingPoint(
 		Translation2d robotPosition,
