@@ -56,7 +56,6 @@ public class Superstructure {
 		this.elevatorStatesHandler = new ElevatorStatesHandler(robot.getElevator());
 
 		this.enableChangeStateAutomatically = true;
-
 	}
 
 	public RobotState getCurrentState() {
@@ -66,7 +65,6 @@ public class Superstructure {
 	public void logStatus() {
 		Logger.recordOutput(logPath + "CurrentState", currentState);
 		Logger.recordOutput(logPath + "EnableChangeStateAutomatically", enableChangeStateAutomatically);
-
 	}
 
 	public boolean isEnableChangeStateAutomatically() {
