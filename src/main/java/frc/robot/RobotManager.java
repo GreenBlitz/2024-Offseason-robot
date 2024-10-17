@@ -31,7 +31,7 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void robotInit() {
 		LoggerFactory.initializeLogger();
-		PathPlannerUtils.startPathfinder();
+//		PathPlannerUtils.startPathfinder();
 		BatteryUtils.scheduleLimiter();
 
 		this.robot = new Robot();
@@ -70,7 +70,7 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void robotPeriodic() {
 		TimeUtils.updateCycleTime(); // Better to be first
-//		robot.getSwerve().updateStatus();
+		robot.getSwerve().updateStatus();
 		CommandScheduler.getInstance().run();
 		BatteryUtils.logStatus();
 		BusChain.logChainsStatuses();

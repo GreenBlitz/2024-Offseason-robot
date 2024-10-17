@@ -15,7 +15,7 @@ public class IDs {
 		PowerDistribution.ModuleType.kRev
 	);
 
-	public static final Phoenix6DeviceID PIGEON_2 = new Phoenix6DeviceID(0, BusChain.CANIVORE);
+	public static final Phoenix6DeviceID PIGEON_2 = new Phoenix6DeviceID(0, BusChain.ROBORIO);
 
 	public static class TalonSRXIDs {
 

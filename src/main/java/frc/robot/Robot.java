@@ -41,7 +41,7 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
-//	private final Swerve swerve;
+	private final Swerve swerve;
 	private final ElevatorRoller elevatorRoller;
 	private final Funnel funnel;
 	private final Pivot pivot;
@@ -52,11 +52,11 @@ public class Robot {
 	private final Superstructure superstructure;
 
 	public Robot() {
-//		this.swerve = new Swerve(
-//			SwerveConstantsFactory.create(SwerveType.SWERVE),
-//			ModulesFactory.create(SwerveType.SWERVE),
-//			GyroFactory.create(SwerveType.SWERVE)
-//		);
+		this.swerve = new Swerve(
+			SwerveConstantsFactory.create(SwerveType.SWERVE),
+			ModulesFactory.create(SwerveType.SWERVE),
+			GyroFactory.create(SwerveType.SWERVE)
+		);
 		this.elevatorRoller = new ElevatorRoller(ElevatorRollerFactory.create(ElevatorRollerConstants.LOG_PATH));
 		this.funnel = new Funnel(FunnelFactory.create(FunnelConstants.LOG_PATH));
 		this.pivot = new Pivot(PivotFactory.create(PivotConstants.LOG_PATH));
@@ -79,9 +79,9 @@ public class Robot {
 		return new InstantCommand();
 	}
 
-//	public Swerve getSwerve() {
-//		return swerve;
-//	}
+	public Swerve getSwerve() {
+		return swerve;
+	}
 
 	public ElevatorRoller getElevatorRoller() {
 		return elevatorRoller;
