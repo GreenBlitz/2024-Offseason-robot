@@ -12,5 +12,6 @@ public record FlywheelStuff(
 	InputSignal<Double> voltageSignal,
 	InputSignal<Rotation2d> velocitySignal,
 	IRequest<Double> voltageRequest,
-	IRequest<Rotation2d> velocityRequest
+	IRequest<Rotation2d> velocityRequest,
+	InputSignal... signals
 ) {}

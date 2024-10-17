@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.Robot;
 import frc.robot.hardware.angleencoder.IAngleEncoder;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
@@ -51,6 +52,7 @@ public class Module {
 		this.steer = steerStuff.steer();
 		this.steerVoltageRequest = steerStuff.voltageRequest();
 		this.steerPositionRequest = steerStuff.positionRequest();
+		steer.resetPosition(new Rotation2d());
 		this.steerStuff = steerStuff;
 
 		this.drive = driveStuff.drive();
@@ -66,6 +68,7 @@ public class Module {
 
 		updateInputs();
 		resetByEncoder();
+
 	}
 
 	public SysIdCalibrator.SysIdConfigInfo getSteerSysIdConfigInfo() {

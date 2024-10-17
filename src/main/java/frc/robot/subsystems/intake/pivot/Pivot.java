@@ -5,7 +5,10 @@ import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.motor.ControllableMotor;
 import frc.robot.hardware.request.IRequest;
+import frc.robot.hardware.request.cansparkmax.SparkMaxDoubleRequest;
 import frc.robot.subsystems.GBSubsystem;
+import frc.utils.calibration.sysid.SysIdCalibrator;
+import org.littletonrobotics.junction.Logger;
 
 public class Pivot extends GBSubsystem {
 
@@ -23,7 +26,7 @@ public class Pivot extends GBSubsystem {
 		this.resetAngleFilter = new MedianFilter(PivotConstants.MEDIAN_FILTER_SIZE);
 		this.commandsBuilder = new PivotCommandsBuilder(this);
 
-		motor.resetPosition(PivotConstants.MINIMUM_ACHIEVABLE_ANGLE);
+		motor.resetPosition(PivotConstants.MAXIMUM_ACHIEVABLE_ANGLE);
 		updateInputs();
 		updateResetFilter();
 	}
@@ -64,16 +67,31 @@ public class Pivot extends GBSubsystem {
 
 	private void updateInputs() {
 		motor.updateSignals(pivotStuff.positionSignal(), pivotStuff.voltageSignal());
+		motor.updateSignals(pivotStuff.signals());
 	}
-
+	
+	public SysIdCalibrator getSysidCalibrator(){
+		return new SysIdCalibrator(
+				motor.getSysidConfigInfo(),
+				this,
+				this::setVoltage
+		);
+	}
+	
+	public void setVoltage(double voltage){
+		motor.applyDoubleRequest(new SparkMaxDoubleRequest(voltage, SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE,0));
+	}
+	
 	@Override
 	protected void subsystemPeriodic() {
 		if (
-			PivotConstants.MINIMUM_ACHIEVABLE_ANGLE.getRotations()
-				> resetAngleFilter.calculate(pivotStuff.positionSignal().getLatestValue().getRotations())
+			PivotConstants.MAXIMUM_ACHIEVABLE_ANGLE.getRotations()
+				< resetAngleFilter.calculate(pivotStuff.positionSignal().getLatestValue().getRotations())
 		) {
-			motor.resetPosition(PivotConstants.MINIMUM_ACHIEVABLE_ANGLE);
+			motor.resetPosition(PivotConstants.MAXIMUM_ACHIEVABLE_ANGLE);
 		}
+		
+		Logger.recordOutput("pivot pos", pivotStuff.positionSignal().getLatestValue().getDegrees());
 		updateInputs();
 	}
 

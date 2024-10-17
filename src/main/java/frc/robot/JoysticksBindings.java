@@ -1,5 +1,10 @@
 package frc.robot;
 
+import com.ctre.phoenix6.SignalLogger;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
 import frc.utils.joysticks.SmartJoystick;
@@ -36,12 +41,22 @@ public class JoysticksBindings {
 						() -> usedJoystick.getAxisValue(Axis.RIGHT_X)
 					)
 			);
+		usedJoystick.B.whileTrue(
+				robot.getFunnel().getCommandsBuilder().setPower(-0.9).alongWith(
+						robot.getIntakeRoller().getCommandsBuilder().setPower(-0.9)
+				)
+		);
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
-	}
+		
+		usedJoystick.A.whileTrue(robot.getPivot().getCommandsBuilder().goToPosition(Rotation2d.fromDegrees(15)));
+		usedJoystick.B.whileTrue(robot.getPivot().getCommandsBuilder().goToPosition(Rotation2d.fromDegrees(45)));
+		usedJoystick.Y.whileTrue(robot.getPivot().getCommandsBuilder().goToPosition(Rotation2d.fromDegrees(100)));
+		usedJoystick.X.whileTrue(robot.getPivot().getCommandsBuilder().stop());
+	};
 
 	private static void thirdJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;

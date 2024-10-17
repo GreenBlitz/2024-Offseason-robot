@@ -14,6 +14,7 @@ import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.robot.subsystems.flywheel.FlywheelStuff;
 import frc.utils.AngleUnit;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Function;
 
@@ -22,11 +23,13 @@ import static edu.wpi.first.units.Units.Volts;
 
 public class RealFlywheelConstants {
 
-	private static final double kS = 3;
+	private static final double kS = 0.37804;
 
-	private static final double kV = 3;
+	private static final double kV = 0.13081;
+	
+	private static final double kA = 0.353;
 
-	private static final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV);
+	private static final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV, kA);
 
 	private static final Function<Rotation2d, Double> feedForwardCalculator = velocity -> feedforward.calculate(velocity.getRotations());
 
@@ -37,7 +40,7 @@ public class RealFlywheelConstants {
 			Volts.of(1).per(Seconds.of(1)),
 			Volts.of(7),
 			Seconds.of(10),
-			(state) -> SignalLogger.writeString("state", state.toString())
+			(state) -> Logger.recordOutput("state", state.toString())
 		);
 	}
 
@@ -48,7 +51,7 @@ public class RealFlywheelConstants {
 		sparkMax.getEncoder().setVelocityConversionFactor(GEAR_RATIO);
 		sparkMax.setIdleMode(CANSparkBase.IdleMode.kCoast);
 
-		sparkMax.getPIDController().setP(5);
+		sparkMax.getPIDController().setP(0);
 		sparkMax.getPIDController().setI(0);
 		sparkMax.getPIDController().setD(0);
 	}
@@ -64,8 +67,14 @@ public class RealFlywheelConstants {
 
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 
-		SuppliedAngleSignal velocitySignal = new SuppliedAngleSignal("velocity", sparkMaxWrapper.getEncoder()::getVelocity, AngleUnit.ROTATIONS);
-
+		SuppliedAngleSignal velocitySignal = new SuppliedAngleSignal("velocity", () -> sparkMaxWrapper.getEncoder().getVelocity() / 60, AngleUnit.RADIANS);
+		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("position", () -> sparkMaxWrapper.getEncoder().getPosition(), AngleUnit.RADIANS);
+		
+		
+		SuppliedDoubleSignal velocitySignalForSysID = new SuppliedDoubleSignal("velocity - sysid", () -> sparkMaxWrapper.getEncoder().getVelocity() / 60);
+		SuppliedDoubleSignal positionSignalForSysID = new SuppliedDoubleSignal("position - sysid", () -> sparkMaxWrapper.getEncoder().getPosition());
+		
+		
 		SparkMaxAngleRequest velocityRequest = new SparkMaxAngleRequest(
 			Rotation2d.fromRotations(0),
 			SparkMaxAngleRequest.SparkAngleRequestType.VELOCITY,
@@ -75,7 +84,7 @@ public class RealFlywheelConstants {
 
 		SparkMaxDoubleRequest voltageRequest = new SparkMaxDoubleRequest(0, SparkMaxDoubleRequest.SparkDoubleRequestType.VOLTAGE, 0);
 
-		return new FlywheelStuff(logPath, motor, isInverted, voltageSignal, velocitySignal, voltageRequest, velocityRequest);
+		return new FlywheelStuff(logPath, motor, isInverted, voltageSignal, velocitySignal, voltageRequest, velocityRequest, positionSignal, positionSignalForSysID,velocitySignalForSysID);
 	}
 
 }
