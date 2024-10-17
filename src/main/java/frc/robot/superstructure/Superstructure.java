@@ -42,7 +42,6 @@ public class Superstructure {
 
 	private boolean enableChangeStateAutomatically;
 
-
 	public Superstructure(String logPath, Robot robot) {
 		this.logPath = logPath;
 
