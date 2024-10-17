@@ -21,7 +21,9 @@ import frc.robot.subsystems.intake.roller.IntakeStatesHandler;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
+import frc.utils.time.TimeUtils;
 import org.littletonrobotics.junction.Logger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Superstructure {
 
@@ -95,6 +97,17 @@ public class Superstructure {
 			Tolerances.ELEVATOR_POSITION_METERS_TOLERANCE
 		);
 		return isElevatorRollerReady && isElevatorReady;
+	}
+
+	private boolean isNoteInRobot(AtomicReference<Double> lastTimeDetectedNote) {
+		if (!isNoteInIntake() && !isNoteInElevatorRoller() && !isNoteInShooter()) {
+			boolean noteNotDetectedInAWhile = lastTimeDetectedNote.get() - TimeUtils.getCurrentTimeSeconds()
+				> Tolerances.OUT_OF_ROBOT_NOTE_DETECTION_TIMEOUT_SECONDS;
+			return noteNotDetectedInAWhile;
+		} else {
+			lastTimeDetectedNote.set(TimeUtils.getCurrentTimeSeconds());
+		}
+		return false;
 	}
 
 	public Command enableChangeStateAutomatically(boolean enable) {
@@ -182,7 +195,7 @@ public class Superstructure {
 			setCurrentStateValue(RobotState.SPEAKER),
 			enableChangeStateAutomatically(false),
 			new SequentialCommandGroup(
-				funnelStateHandler.setState(FunnelState.STOP).withTimeout(3).until(this::isReadyToShoot),
+				funnelStateHandler.setState(FunnelState.STOP).until(this::isReadyToShoot),
 				funnelStateHandler.setState(FunnelState.SPEAKER).until(() -> !isNoteInShooter()),
 				funnelStateHandler.setState(FunnelState.STOP)
 			),
@@ -238,10 +251,6 @@ public class Superstructure {
 			setCurrentStateValue(RobotState.TRANSFER_SHOOTER_ELEVATOR),
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
-					intakeStatesHandler.setState(IntakeStates.STOP),
-					funnelStateHandler.setState(FunnelState.STOP)
-				),//.until(isReadyToTransfer)
-				new ParallelCommandGroup(
 					intakeStatesHandler.setState(IntakeStates.SHOOTER_TO_ELEVATOR),
 					funnelStateHandler.setState(FunnelState.SHOOTER_TO_ELEVATOR)
 				).until(this::isNoteInElevatorRoller),
@@ -266,10 +275,6 @@ public class Superstructure {
 			setCurrentStateValue(RobotState.TRANSFER_ELEVATOR_SHOOTER),
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
-					intakeStatesHandler.setState(IntakeStates.STOP),
-					funnelStateHandler.setState(FunnelState.STOP)
-				),//.until(isReadyToTransfer)
-				new ParallelCommandGroup(
 					intakeStatesHandler.setState(IntakeStates.ELEVATOR_TO_SHOOTER),
 					funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER)
 				).until(this::isNoteInShooter),
@@ -280,7 +285,7 @@ public class Superstructure {
 			),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 			new SequentialCommandGroup(
-				elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_TO_ELEVATOR).until(() -> !this.isNoteInElevatorRoller()),
+				elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_FROM_ELEVATOR).until(() -> !this.isNoteInElevatorRoller()),
 				elevatorRollerStateHandler.setState(ElevatorRollerState.STOP)
 			),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
@@ -290,6 +295,7 @@ public class Superstructure {
 	}
 
 	public Command intakeOuttake() {
+		AtomicReference<Double> lastTimeDetectedNote = new AtomicReference<>(TimeUtils.getCurrentTimeSeconds());
 		return new ParallelCommandGroup(
 			setCurrentStateValue(RobotState.INTAKE_OUTTAKE),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
@@ -299,14 +305,13 @@ public class Superstructure {
 			intakeStatesHandler.setState(IntakeStates.OUTTAKE),
 			pivotStateHandler.setState(PivotState.ON_FLOOR),
 			elevatorStatesHandler.setState(ElevatorStates.IDLE)
-		).until(() -> !isNoteInIntake() && !isNoteInElevatorRoller() && !isNoteInShooter());
+		).until(() -> this.isNoteInRobot(lastTimeDetectedNote));
 	}
 
 	public Command shooterOuttake() {
 		return new ParallelCommandGroup(
 			setCurrentStateValue(RobotState.SHOOTER_OUTTAKE),
 			new SequentialCommandGroup(
-				funnelStateHandler.setState(FunnelState.STOP).withTimeout(3), // .until(() -> isReadyToShooterOuttake())
 				funnelStateHandler.setState(FunnelState.SHOOTER_OUTTAKE).until(() -> !isNoteInShooter()),
 				funnelStateHandler.setState(FunnelState.STOP)
 			),
@@ -316,7 +321,7 @@ public class Superstructure {
 			intakeStatesHandler.setState(IntakeStates.STOP),
 			pivotStateHandler.setState(PivotState.UP),
 			elevatorStatesHandler.setState(ElevatorStates.IDLE)
-		);
+		).until(() -> !isNoteInShooter());
 	}
 	//@formatter:on
 
