@@ -37,14 +37,12 @@ public class Superstructure {
 	private final ElevatorStatesHandler elevatorStatesHandler;
 
 	private RobotState currentState;
-	private final StatesMotionPlanner statesMotionPlanner;
 
 	private boolean enableChangeStateAutomatically;
 
 
 	public Superstructure(String logPath, Robot robot) {
 		this.logPath = logPath;
-		this.statesMotionPlanner = new StatesMotionPlanner(robot.getSuperstructure());
 
 		this.robot = robot;
 		this.swerve = robot.getSwerve();
@@ -99,7 +97,7 @@ public class Superstructure {
 		return isElevatorRollerReady && isElevatorReady;
 	}
 
-	private Command enableChangeStateAutomatically(boolean enable) {
+	public Command enableChangeStateAutomatically(boolean enable) {
 		return new InstantCommand(() -> enableChangeStateAutomatically = enable);
 	}
 
@@ -151,7 +149,8 @@ public class Superstructure {
 					funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER),
 					intakeStatesHandler.setState(IntakeStates.INTAKE),
 					pivotStateHandler.setState(PivotState.UP)
-				).until(this::isNoteInShooter),enableChangeStateAutomatically(true),
+				).until(this::isNoteInShooter),
+					enableChangeStateAutomatically(true),
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.STOP),
 					intakeStatesHandler.setState(IntakeStates.STOP)
@@ -194,12 +193,11 @@ public class Superstructure {
 			intakeStatesHandler.setState(IntakeStates.STOP),
 			pivotStateHandler.setState(PivotState.UP),
 			elevatorStatesHandler.setState(ElevatorStates.IDLE)
-		);
+		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
 	}
 
 	public Command preAmp() {
 		return new ParallelCommandGroup(
-			enableChangeStateAutomatically(false),
 			setCurrentStateValue(RobotState.PRE_AMP),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
 			funnelStateHandler.setState(FunnelState.STOP),
@@ -208,7 +206,7 @@ public class Superstructure {
 			intakeStatesHandler.setState(IntakeStates.STOP),
 			pivotStateHandler.setState(PivotState.UP),
 			elevatorStatesHandler.setState(ElevatorStates.PRE_AMP)
-		).handleInterrupt(() -> enableChangeStateAutomatically(true).schedule());
+		);
 	}
 
 	public Command amp() {

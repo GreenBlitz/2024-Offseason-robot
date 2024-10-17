@@ -1,6 +1,7 @@
 package frc.robot.superstructure;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class StatesMotionPlanner {
 
@@ -13,9 +14,11 @@ public class StatesMotionPlanner {
 	public Command setState(RobotState state) {
 		return switch (state) {
 			case INTAKE, PRE_SPEAKER, PRE_AMP, TRANSFER_ELEVATOR_SHOOTER, TRANSFER_SHOOTER_ELEVATOR ->
-				superstructure.setState(state)
-					.until(superstructure::isEnableChangeStateAutomatically)
-					.andThen(superstructure.setState(RobotState.IDLE));
+				new SequentialCommandGroup(
+					superstructure.enableChangeStateAutomatically(false),
+					superstructure.setState(state).until(superstructure::isEnableChangeStateAutomatically),
+					superstructure.setState(RobotState.IDLE)
+				);
 			case INTAKE_OUTTAKE, SPEAKER, AMP, IDLE, SHOOTER_OUTTAKE -> superstructure.setState(state);
 		};
 	}
