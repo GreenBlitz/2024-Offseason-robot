@@ -12,6 +12,7 @@ public class ShootingHelpers {
 		return getClosestShootingPoint(
 			robotPose.getTranslation(),
 			ShootingHelpersConstants.SHOOTING_DISTANCE_FROM_SPEAKER,
+			Field.getSpeaker().toTranslation2d(),
 			new Pair<>(
 				ShootingHelpersConstants.SPEAKER_LOWER_BOUND_WITHIN_SHOOTING_RANGE,
 				ShootingHelpersConstants.SPEAKER_UPPER_BOUND_WITHIN_SHOOTING_RANGE
@@ -23,11 +24,12 @@ public class ShootingHelpers {
 	public static Translation2d getClosestShootingPoint(
 		Translation2d robotPosition,
 		double DistanceForShootingFromSpeaker,
+		Translation2d speakerPosition,
 		Pair<Rotation2d, Rotation2d>... invalidRanges
 	) {
-		Translation2d speaker = Field.getSpeaker().toTranslation2d();
+		Translation2d speaker = speakerPosition;
 		Translation2d robotRelativeToSpeaker = robotPosition.minus(speaker);
-		Rotation2d angleFromSpeaker = findAngleFromSpeaker(robotPosition);
+		Rotation2d angleFromSpeaker = findAngleFromSpeaker(robotPosition, speakerPosition);
 		double angleFromSpeakerRadians = angleFromSpeaker.getRadians();
 
 		Translation2d closestValidPointRelativeToSpeaker;
@@ -38,7 +40,6 @@ public class ShootingHelpers {
 
 			if (angleFromSpeakerRadians >= minimumRangeRadians && angleFromSpeakerRadians <= maximumRangeRadians) {
 				Rotation2d closestValidAngle = getClosestAngleIntervalBound(invalidRange.getFirst(), invalidRange.getSecond(), angleFromSpeaker);
-
 				return angleToPoint(closestValidAngle, DistanceForShootingFromSpeaker).plus(speaker);
 			}
 		}
@@ -51,10 +52,9 @@ public class ShootingHelpers {
 		return new Translation2d(Math.cos(angle.getRadians()), Math.sin(angle.getRadians())).times(radius);
 	}
 
-	private static Rotation2d findAngleFromSpeaker(Translation2d robotPosition) {
-		Translation2d speaker = Field.getSpeaker().toTranslation2d();
-		Translation2d robotPoseRelativeToSpeaker = robotPosition.minus(speaker);
-		return Rotation2d.fromRadians(Math.atan2(robotPoseRelativeToSpeaker.getY(), robotPoseRelativeToSpeaker.getX()));
+	private static Rotation2d findAngleFromSpeaker(Translation2d robotPosition, Translation2d speaker) {
+		Translation2d robotPositionRelativeToSpeaker = robotPosition.minus(speaker);
+		return Rotation2d.fromRadians(Math.atan2(robotPositionRelativeToSpeaker.getY(), robotPositionRelativeToSpeaker.getX()));
 	}
 
 	private static Translation2d getCutPointOnRadiusFromCoordinates(Translation2d point, double radius) {
