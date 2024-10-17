@@ -50,7 +50,7 @@ public class Superstructure {
 		this.flywheelStateHandler = new FlywheelStateHandler(robot.getFlywheel());
 		this.funnelStateHandler = new FunnelStateHandler(robot.getFunnel());
 		this.intakeStatesHandler = new IntakeStatesHandler(robot.getIntakeRoller());
-		this.pivotStateHandler = new PivotStateHandler((robot.getPivot()));
+		this.pivotStateHandler = new PivotStateHandler(robot.getPivot());
 		this.elevatorStatesHandler = new ElevatorStatesHandler(robot.getElevator());
 
 		this.enableChangeStateAutomatically = true;
