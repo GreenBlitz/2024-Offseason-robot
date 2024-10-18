@@ -300,7 +300,6 @@ public class Superstructure {
 		AtomicReference<Double> lastTimeDetectedNote = new AtomicReference<>(TimeUtils.getCurrentTimeSeconds());
 		return new ParallelCommandGroup(
 			setCurrentStateValue(RobotState.INTAKE_OUTTAKE),
-			enableChangeStateAutomatically(true),
 			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 			elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_FROM_ELEVATOR),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
