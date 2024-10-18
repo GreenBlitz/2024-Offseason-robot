@@ -101,7 +101,7 @@ public class Robot {
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 		swerve.setStateHelper(new SwerveStateHelper(() -> Optional.of(poseEstimator.getEstimatedPose()), Optional::empty, swerve));
 
-		this.superstructure = new Superstructure(this);
+		this.superstructure = new Superstructure("Superstructure/", this);
 
 		configPathPlanner();
 		configureBindings();
