@@ -170,7 +170,7 @@ public class Superstructure {
 	public Command speaker() {
 		return new ParallelCommandGroup(
 			setCurrentStateName(RobotState.SPEAKER),
-            enableChangeStateAutomatically(true),
+            enableChangeStateAutomatically(false),
                 new SequentialCommandGroup(
 				funnelStateHandler.setState(FunnelState.STOP).until(this::isReadyToShoot),
 				funnelStateHandler.setState(FunnelState.SPEAKER),//.until(() -> !isNoteInShooter()),
@@ -202,7 +202,7 @@ public class Superstructure {
 	public Command amp() {
 		return new ParallelCommandGroup(
 			setCurrentStateName(RobotState.AMP),
-            enableChangeStateAutomatically(true),
+            enableChangeStateAutomatically(false),
                 new SequentialCommandGroup(
 				new ParallelCommandGroup(
 //					swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
