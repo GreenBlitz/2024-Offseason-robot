@@ -170,7 +170,7 @@ public class Superstructure {
 	public Command speaker() {
 		return new ParallelCommandGroup(
 			setCurrentStateName(RobotState.SPEAKER),
-            enableChangeStateAutomatically(false),
+            enableChangeStateAutomatically(true),
                 new SequentialCommandGroup(
 				funnelStateHandler.setState(FunnelState.STOP).until(this::isReadyToShoot),
 				funnelStateHandler.setState(FunnelState.SPEAKER),//.until(() -> !isNoteInShooter()),
@@ -188,7 +188,7 @@ public class Superstructure {
 	public Command preAmp() {
 		return new ParallelCommandGroup(
 			setCurrentStateName(RobotState.PRE_AMP),
-            enableChangeStateAutomatically(false),
+            enableChangeStateAutomatically(true),
 //			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
 			funnelStateHandler.setState(FunnelState.STOP),
 			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
@@ -202,7 +202,7 @@ public class Superstructure {
 	public Command amp() {
 		return new ParallelCommandGroup(
 			setCurrentStateName(RobotState.AMP),
-            enableChangeStateAutomatically(false),
+            enableChangeStateAutomatically(true),
                 new SequentialCommandGroup(
 				new ParallelCommandGroup(
 //					swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.AMP)),
@@ -230,7 +230,7 @@ public class Superstructure {
 	public Command transferShooterElevator() {
 		return new ParallelCommandGroup(
 			setCurrentStateName(RobotState.TRANSFER_SHOOTER_ELEVATOR),
-            enableChangeStateAutomatically(false),
+            enableChangeStateAutomatically(true),
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					intakeStatesHandler.setState(IntakeStates.INTAKE),
@@ -253,7 +253,7 @@ public class Superstructure {
 	public Command transferElevatorShooter() {
 		return new ParallelCommandGroup(
 			setCurrentStateName(RobotState.TRANSFER_ELEVATOR_SHOOTER),
-            enableChangeStateAutomatically(false),
+            enableChangeStateAutomatically(true),
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					intakeStatesHandler.setState(IntakeStates.INTAKE),
