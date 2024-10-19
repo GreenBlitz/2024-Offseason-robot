@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.superstructure.RobotState;
 import frc.utils.joysticks.Axis;
 import frc.utils.joysticks.JoystickPorts;
@@ -47,6 +48,7 @@ public class JoysticksBindings {
 		usedJoystick.BACK.onTrue(robot.getSuperstructure().setState(RobotState.TRANSFER_SHOOTER_ELEVATOR));
 		usedJoystick.Y.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE_OUTTAKE));
 		usedJoystick.X.onTrue(robot.getSuperstructure().setState(RobotState.SPEAKER));
+		usedJoystick.POV_RIGHT.onTrue(robot.getSuperstructure().setState(RobotState.PRE_SPEAKER));
 		usedJoystick.POV_UP.onTrue(robot.getSuperstructure().setState(RobotState.AMP));
 		usedJoystick.POV_DOWN.onTrue(robot.getSuperstructure().setState(RobotState.PRE_AMP));
 	}
@@ -54,6 +56,8 @@ public class JoysticksBindings {
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
+		usedJoystick.POV_UP.whileTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(0)));
+		usedJoystick.POV_DOWN.whileTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(180)));
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

@@ -1,11 +1,13 @@
 package frc.robot.superstructure;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
+import frc.robot.constants.Field;
 import frc.robot.subsystems.elevator.ElevatorStates;
 import frc.robot.subsystems.elevator.ElevatorStatesHandler;
 import frc.robot.subsystems.elevatorRoller.ElevatorRollerState;
@@ -19,8 +21,10 @@ import frc.robot.subsystems.intake.pivot.PivotStateHandler;
 import frc.robot.subsystems.intake.roller.IntakeStates;
 import frc.robot.subsystems.intake.roller.IntakeStatesHandler;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.SwerveState;
 import frc.robot.subsystems.swerve.swervestatehelpers.AimAssist;
+import frc.utils.shootinghelpers.ShootingHelpers;
 import org.littletonrobotics.junction.Logger;
 
 public class Superstructure {
@@ -70,7 +74,12 @@ public class Superstructure {
 	private boolean isReadyToShoot() {
 		boolean isFlywheelReady = robot.getFlywheel().isAtVelocity(FlywheelState.SHOOTING.getVelocity(), Tolerances.FLYWHEEL_VELOCITY_TOLERANCE);
 		// boolean isSwerveReady = swerve.isAtHeading(speaker);
-		return isFlywheelReady;// && isSwerveReady
+		boolean isAtPose = robot.getPoseEstimator().isAtPose(new Pose2d(
+				ShootingHelpers.getClosestShootingPoint(robot.getPoseEstimator().getEstimatedPose()),
+				SwerveMath.getRelativeTranslation(
+				robot.getPoseEstimator().getEstimatedPose().getTranslation(), Field.getSpeaker().toTranslation2d())
+						.getAngle()));
+		return isFlywheelReady && isAtPose;// && isSwerveReady
 	}
 
 	private boolean isReadyToAmp() {
@@ -122,11 +131,11 @@ public class Superstructure {
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER),
-					intakeStatesHandler.setState(IntakeStates.INTAKE)
-//					pivotStateHandler.setState(PivotState.ON_FLOOR)
+					intakeStatesHandler.setState(IntakeStates.INTAKE),
+					pivotStateHandler.setState(PivotState.ON_FLOOR)
 				).until(this::isNoteInShooter),
 				new ParallelCommandGroup(
-//					pivotStateHandler.setState(PivotState.UP),
+					pivotStateHandler.setState(PivotState.UP),
 					funnelStateHandler.setState(FunnelState.STOP),
 					intakeStatesHandler.setState(IntakeStates.STOP)
 				)
@@ -159,7 +168,14 @@ public class Superstructure {
 				funnelStateHandler.setState(FunnelState.SPEAKER).until(() -> !isNoteInShooter()),
 				funnelStateHandler.setState(FunnelState.STOP)
 			),
-			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)),
+			swerve.getCommandsBuilder().driveToPose(
+					() -> robot.getPoseEstimator().getEstimatedPose(),
+					() -> new Pose2d(
+						ShootingHelpers.getClosestShootingPoint(robot.getPoseEstimator().getEstimatedPose()),
+						SwerveMath.getRelativeTranslation(
+									robot.getPoseEstimator().getEstimatedPose().getTranslation(), Field.getSpeaker().toTranslation2d())
+									.getAngle())
+			),
 			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
 			flywheelStateHandler.setState(FlywheelState.SHOOTING),
 			intakeStatesHandler.setState(IntakeStates.STOP),

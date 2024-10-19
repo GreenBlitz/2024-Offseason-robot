@@ -2,11 +2,13 @@ package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.superstructure.Tolerances;
 import frc.robot.vision.limelights.GyroAngleValues;
 import frc.robot.vision.limelights.ILimelightFilterer;
 import frc.robot.poseestimator.observations.OdometryObservation;
@@ -260,6 +262,13 @@ public class GBPoseEstimator extends GBSubsystem implements IPoseEstimator {
 	private void updateGyroOffsetInPose() {
 		estimatedPose = new Pose2d(estimatedPose.getTranslation(), latestGyroAngle.plus(headingOffset));
 		odometryPose = new Pose2d(estimatedPose.getTranslation(), latestGyroAngle.plus(headingOffset));
+	}
+
+	public boolean isAtPose(Pose2d pose) {
+		Transform2d transform2d = new Transform2d(pose, estimatedPose);
+		return Math.abs(transform2d.getX()) < Tolerances.TRANSLATION_TOLERANCE_METERS &&
+				Math.abs(transform2d.getY()) < Tolerances.TRANSLATION_TOLERANCE_METERS &&
+				Math.abs(transform2d.getRotation().getDegrees()) < Math.abs(Tolerances.HEADING_TOLERANCE.getDegrees());
 	}
 
 	@Override

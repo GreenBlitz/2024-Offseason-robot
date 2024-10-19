@@ -148,11 +148,11 @@ public class SwerveCommandsBuilder {
 	}
 
 
-	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose, Function<Pose2d, Boolean> isAtPose) {
+	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose) {
 		return new DeferredCommand(
 			() -> new SequentialCommandGroup(
 				pathToPose(currentPose.get(), targetPose.get()),
-				pidToPose(currentPose, targetPose.get(), isAtPose)
+				pidToPose(currentPose, targetPose.get())
 			),
 			Set.of(swerve)
 		).withName("Drive to pose");
@@ -171,12 +171,12 @@ public class SwerveCommandsBuilder {
 			.withName("Path to pose: " + targetPose);
 	}
 
-	private Command pidToPose(Supplier<Pose2d> currentPose, Pose2d targetPose, Function<Pose2d, Boolean> isAtPose) {
+	private Command pidToPose(Supplier<Pose2d> currentPose, Pose2d targetPose) {
 		return new FunctionalCommand(
 			swerve::resetPIDControllers,
 			() -> swerve.pidToPose(currentPose.get(), targetPose),
 			interrupted -> {},
-			() -> isAtPose.apply(targetPose),
+			() -> false,
 			swerve
 		).withName("PID to pose: " + targetPose);
 	}
