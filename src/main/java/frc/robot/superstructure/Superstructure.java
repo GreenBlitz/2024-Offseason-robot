@@ -172,9 +172,9 @@ public class Superstructure {
 			setCurrentStateName(RobotState.SPEAKER),
             enableChangeStateAutomatically(false),
 			new SequentialCommandGroup(
-				enableChangeStateAutomatically(true),
 				funnelStateHandler.setState(FunnelState.STOP).until(this::isReadyToShoot),
 				funnelStateHandler.setState(FunnelState.SPEAKER),//.until(() -> !isNoteInShooter()),
+				enableChangeStateAutomatically(true),
 				funnelStateHandler.setState(FunnelState.STOP)
 			),
 //			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)),
@@ -264,9 +264,9 @@ public class Superstructure {
 				),//.until(this::isNoteInShooter),
 				new ParallelCommandGroup(
 					intakeStatesHandler.setState(IntakeStates.STOP),
-					funnelStateHandler.setState(FunnelState.STOP)
-				),
-				enableChangeStateAutomatically(true)
+					funnelStateHandler.setState(FunnelState.STOP),
+					enableChangeStateAutomatically(true)
+				)
 			),
 			new SequentialCommandGroup(
 				elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_FROM_ELEVATOR).until(() -> !this.isNoteInElevatorRoller()),
