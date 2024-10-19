@@ -18,7 +18,7 @@
           }
         },
         {
-          "type": "race",
+          "type": "parallel",
           "data": {
             "commands": [
               {
@@ -43,12 +43,6 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Drive To Shoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "PRE_SPEAKER"
                 }
               }
@@ -62,15 +56,15 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "shoot3"
+          }
+        },
+        {
           "type": "race",
           "data": {
             "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "shoot3"
-                }
-              },
               {
                 "type": "named",
                 "data": {
@@ -84,12 +78,6 @@
           "type": "deadline",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Drive To Shoot"
-                }
-              },
               {
                 "type": "named",
                 "data": {

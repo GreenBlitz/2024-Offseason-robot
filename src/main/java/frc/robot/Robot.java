@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.constants.Field;
 import frc.robot.constants.IDs;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.factories.ElevatorFactory;
@@ -24,11 +26,13 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.funnel.FunnelConstants;
 import frc.robot.subsystems.funnel.factory.FunnelFactory;
+import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.SwerveType;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.swerveconstants.SwerveConstantsFactory;
 import frc.robot.superstructure.Superstructure;
+import frc.utils.auto.PathPlannerUtils;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.robot.poseestimator.GBPoseEstimator;
 import frc.robot.poseestimator.PoseEstimatorConstants;
@@ -39,6 +43,7 @@ import frc.robot.vision.limelights.LimelightFilterer;
 import frc.robot.vision.limelights.LimelightFiltererConfig;
 import frc.robot.vision.limelights.MultiLimelights;
 import frc.utils.auto.AutonomousChooser;
+import frc.utils.shootinghelpers.ShootingHelpers;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -119,6 +124,10 @@ public class Robot {
 
 	private void configPathPlanner() {
 		// Register commands...
+		PathPlannerUtils.registerCommand(
+				"Drive To Shoot",
+				swerve.getCommandsBuilder().driveToPose(poseEstimator :: getEstimatedPose, () -> new Pose2d(ShootingHelpers.getClosestShootingPoint(poseEstimator.getEstimatedPose()), SwerveMath.getRelativeTranslation(ShootingHelpers.getClosestShootingPoint(poseEstimator.getEstimatedPose()) , Field.getSpeaker().toTranslation2d()).getAngle()), )
+		);
 		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose);
 		autonomousChooser = new AutonomousChooser("Autonomous Chooser");
 	}
