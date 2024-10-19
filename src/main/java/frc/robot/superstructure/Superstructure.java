@@ -242,9 +242,9 @@ public class Superstructure {
 				new ParallelCommandGroup(
 					intakeStatesHandler.setState(IntakeStates.STOP),
 					funnelStateHandler.setState(FunnelState.STOP),
-					elevatorRollerStateHandler.setState(ElevatorRollerState.STOP)
-				),
-				enableChangeStateAutomatically(true)
+					elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
+					enableChangeStateAutomatically(true)
+				)
 			),
 //			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
