@@ -171,11 +171,12 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 			setCurrentStateName(RobotState.SPEAKER),
             enableChangeStateAutomatically(false),
-                new SequentialCommandGroup(
+			new SequentialCommandGroup(
 				funnelStateHandler.setState(FunnelState.STOP).until(this::isReadyToShoot),
 				funnelStateHandler.setState(FunnelState.SPEAKER),//.until(() -> !isNoteInShooter()),
 				funnelStateHandler.setState(FunnelState.STOP)
 			),
+			enableChangeStateAutomatically(true),
 //			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.SPEAKER)),
 			elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
 			flywheelStateHandler.setState(FlywheelState.SHOOTING),
@@ -218,7 +219,8 @@ public class Superstructure {
 //					swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 					elevatorRollerStateHandler.setState(ElevatorRollerState.STOP),
 					elevatorStatesHandler.setState(ElevatorStates.IDLE)
-				)
+				),
+				enableChangeStateAutomatically(true)
 			),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			intakeStatesHandler.setState(IntakeStates.STOP),
@@ -241,7 +243,8 @@ public class Superstructure {
 					intakeStatesHandler.setState(IntakeStates.STOP),
 					funnelStateHandler.setState(FunnelState.STOP),
 					elevatorRollerStateHandler.setState(ElevatorRollerState.STOP)
-				)
+				),
+				enableChangeStateAutomatically(true)
 			),
 //			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
@@ -253,7 +256,7 @@ public class Superstructure {
 	public Command transferElevatorShooter() {
 		return new ParallelCommandGroup(
 			setCurrentStateName(RobotState.TRANSFER_ELEVATOR_SHOOTER),
-            enableChangeStateAutomatically(true),
+            enableChangeStateAutomatically(false),
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					intakeStatesHandler.setState(IntakeStates.INTAKE),
@@ -268,6 +271,7 @@ public class Superstructure {
 				elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_FROM_ELEVATOR).until(() -> !this.isNoteInElevatorRoller()),
 				elevatorRollerStateHandler.setState(ElevatorRollerState.STOP)
 			),
+			enableChangeStateAutomatically(true),
 //			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 			flywheelStateHandler.setState(FlywheelState.DEFAULT),
 			elevatorStatesHandler.setState(ElevatorStates.IDLE),
