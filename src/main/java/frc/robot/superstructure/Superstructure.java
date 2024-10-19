@@ -133,7 +133,7 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 			setCurrentStateName(RobotState.INTAKE),
             enableChangeStateAutomatically(false),
-                new SequentialCommandGroup(
+			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					funnelStateHandler.setState(FunnelState.NOTE_TO_SHOOTER),
 					intakeStatesHandler.setState(IntakeStates.INTAKE),
@@ -232,7 +232,7 @@ public class Superstructure {
 	public Command transferShooterElevator() {
 		return new ParallelCommandGroup(
 			setCurrentStateName(RobotState.TRANSFER_SHOOTER_ELEVATOR),
-            enableChangeStateAutomatically(true),
+            enableChangeStateAutomatically(false),
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					intakeStatesHandler.setState(IntakeStates.INTAKE),
@@ -281,6 +281,7 @@ public class Superstructure {
 
 	public Command intakeOuttake() {
 		return new ParallelCommandGroup(
+			enableChangeStateAutomatically(true),
 			setCurrentStateName(RobotState.INTAKE_OUTTAKE),
 //			swerve.getCommandsBuilder().saveState(SwerveState.DEFAULT_DRIVE),
 			elevatorRollerStateHandler.setState(ElevatorRollerState.TRANSFER_FROM_ELEVATOR),
@@ -289,11 +290,12 @@ public class Superstructure {
 			intakeStatesHandler.setState(IntakeStates.OUTTAKE),
 			pivotStateHandler.setState(PivotState.UP),
 			elevatorStatesHandler.setState(ElevatorStates.IDLE)
-		);
+		).handleInterrupt(()->enableChangeStateAutomatically(true).schedule());
 	}
 
 	public Command shooterOuttake() {
 		return new ParallelCommandGroup(
+			enableChangeStateAutomatically(true),
 			setCurrentStateName(RobotState.SHOOTER_OUTTAKE),
 			new SequentialCommandGroup(
 				funnelStateHandler.setState(FunnelState.SHOOTER_OUTTAKE).until(() -> !isNoteInShooter()),
@@ -305,7 +307,7 @@ public class Superstructure {
 			intakeStatesHandler.setState(IntakeStates.STOP),
 			pivotStateHandler.setState(PivotState.UP),
 			elevatorStatesHandler.setState(ElevatorStates.IDLE)
-		);
+		).handleInterrupt(()-> enableChangeStateAutomatically(true).schedule());
 	}
 	//@formatter:on
 
