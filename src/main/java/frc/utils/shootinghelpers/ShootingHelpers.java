@@ -12,11 +12,7 @@ public class ShootingHelpers {
 		return getClosestShootingPoint(
 			robotPose.getTranslation(),
 			ShootingHelpersConstants.SHOOTING_DISTANCE_FROM_SPEAKER,
-			Field.getSpeaker().toTranslation2d(),
-			new Pair<>(
-				ShootingHelpersConstants.SPEAKER_LOWER_BOUND_WITHIN_SHOOTING_RANGE,
-				ShootingHelpersConstants.SPEAKER_UPPER_BOUND_WITHIN_SHOOTING_RANGE
-			)
+			Field.getSpeaker().toTranslation2d()
 		);
 	}
 
