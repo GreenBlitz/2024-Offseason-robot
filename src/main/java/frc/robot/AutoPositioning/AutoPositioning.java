@@ -37,7 +37,11 @@ public class AutoPositioning {
 
 	private boolean isAtPose(Pose2d pose) {
 		Pose2d estimatedPose = poseEstimator.getEstimatedPose();
-		return pose.minus(estimatedPose).getTranslation().getNorm() <= AutoPositioningConstants.IS_AT_POSE_TOLERANCE
+		double translationDifference = Math.sqrt(
+			  Math.pow(estimatedPose.getX() - pose.getX(), 2)
+			+ Math.pow(estimatedPose.getY() - pose.getY(), 2)
+		);
+		return translationDifference <= AutoPositioningConstants.IS_AT_POSE_TOLERANCE
 			&& swerve.isAtHeading(estimatedPose.getRotation());
 	}
 
