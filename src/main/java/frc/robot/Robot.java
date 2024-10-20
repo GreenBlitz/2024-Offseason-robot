@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.AutoPositioning.AutoPositioning;
 import frc.robot.constants.IDs;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.factories.ElevatorFactory;
@@ -53,6 +54,7 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private AutonomousChooser autonomousChooser;
+	private AutoPositioning autoPositioning;
 
 	private final GBPoseEstimator poseEstimator;
 	private final LimelightFilterer limelightFilterer;
@@ -121,6 +123,7 @@ public class Robot {
 		// Register commands...
 		swerve.configPathPlanner(poseEstimator::getEstimatedPose, poseEstimator::resetPose);
 		autonomousChooser = new AutonomousChooser("Autonomous Chooser");
+		autoPositioning = new AutoPositioning(swerve, poseEstimator);
 	}
 
 	private void configureBindings() {
@@ -129,6 +132,10 @@ public class Robot {
 
 	public Command getAutonomousCommand() {
 		return autonomousChooser.getChosenValue();
+	}
+
+	public AutoPositioning getAutoPositioning() {
+		return autoPositioning;
 	}
 
 	public GBPoseEstimator getPoseEstimator() {
