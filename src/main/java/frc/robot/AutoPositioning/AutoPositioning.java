@@ -21,11 +21,7 @@ public class AutoPositioning {
 
 	// @ formatter:off
 	private Command driveToPose(Pose2d pose) {
-		return swerve.getCommandsBuilder().driveToPose(
-			poseEstimator::getEstimatedPose,
-			() -> pose,
-			this::isAtPose
-		);
+		return swerve.getCommandsBuilder().driveToPose(poseEstimator::getEstimatedPose, () -> pose, this::isAtPose);
 	}
 
 	public Command goToClosestShootingPosition() {
@@ -33,10 +29,7 @@ public class AutoPositioning {
 		Pose2d targetPose = new Pose2d(
 			closestPoint.getX(),
 			closestPoint.getY(),
-			SwerveMath.getRelativeTranslation(
-				poseEstimator.getEstimatedPose().getTranslation(),
-				Field.getSpeaker().toTranslation2d()
-			).getAngle()
+			SwerveMath.getRelativeTranslation(poseEstimator.getEstimatedPose().getTranslation(), Field.getSpeaker().toTranslation2d()).getAngle()
 		);
 		return driveToPose(targetPose);
 	}

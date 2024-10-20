@@ -1,6 +1,5 @@
 package frc.utils.shootinghelpers;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 
 public class ShootingHelpersConstants {
 
