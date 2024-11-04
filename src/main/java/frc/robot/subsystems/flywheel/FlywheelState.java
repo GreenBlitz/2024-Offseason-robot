@@ -6,7 +6,7 @@ public enum FlywheelState {
 
 	DEFAULT(Rotation2d.fromRotations(20)),
 	SHOOTER_OUTTAKE(Rotation2d.fromRotations(20)),
-	SHOOTING(Rotation2d.fromRotations(60));
+	SHOOTING(Rotation2d.fromRotations(40));
 
 	private final Rotation2d velocity;
 
